@@ -1,0 +1,13 @@
+Main photo database:
+	id
+	name (?)
+	path - text
+	tags - text, tags separated by commas no spaces
+	album_id (?)
+	
+All albums:
+	name
+	album_id
+	
+Album <name is id>:
+	photo_id
