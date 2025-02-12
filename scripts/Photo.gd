@@ -63,3 +63,14 @@ func load_img() -> bool:
 		texture = ImageTexture.create_from_image(img)
 		return true
 	return false
+
+func _input(event):
+	if event.is_action_pressed("click"):
+		if is_pixel_opaque(get_local_mouse_position()):
+			pass
+			
+func _process(delta):
+	if is_pixel_opaque(get_local_mouse_position()):
+		visible = false
+	else:
+		visible = true

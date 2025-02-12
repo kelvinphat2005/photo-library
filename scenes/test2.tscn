@@ -13,6 +13,8 @@ file_dialog = NodePath("FileDialog")
 
 [node name="Camera2D" type="Camera2D" parent="Home"]
 offset = Vector2(960, 600)
+position_smoothing_enabled = true
+position_smoothing_speed = 20.0
 
 [node name="FileDialog" type="FileDialog" parent="Home"]
 title = "Open a File"

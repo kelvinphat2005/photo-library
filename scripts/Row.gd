@@ -77,8 +77,8 @@ func fill() -> void:
 	curr_height = photos[0].y
 	
 	# TODO 2
-	var height_diff = curr_height + prev_height 
-	SignalBus.emit_signal("_update_row_height_offset", height_diff)
+	#var height_diff = curr_height + prev_height 
+	# SignalBus.emit_signal("_update_row_height_offset", height_diff)
 	
 	full = true
 	

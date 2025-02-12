@@ -25,6 +25,7 @@ func _ready() -> void:
 	PhotoLoader.active = true
 	
 	SignalBus.connect("_update_row_height_offset", _add_row_height_offset)
+	get_tree().get_root().size_changed.connect(resize) 
 
 func _process(delta):
 	win_size = get_viewport().size
@@ -54,7 +55,7 @@ func _process(delta):
 		camera.position.y += px_per_scroll
 	y_pos = camera.position.y
 
-func load_new_row() -> void:
+func load_new_row():
 	print("[H, ROW]---------NEW CALL-------------")
 	
 	# dont make row if no photos
@@ -71,7 +72,7 @@ func load_new_row() -> void:
 		print("[H, ROW]--> Creating new ROW")
 		# if no rows, create new row
 		# if prev row is full, create new row
-		r = Row.new(1920)
+		r = Row.new(win_size.x)
 		rows.append(r)
 		add_child(r)
 		r.position.y += row_height_offset
@@ -79,10 +80,11 @@ func load_new_row() -> void:
 		curr_photo_index += 1
 		
 	else:
+		# BUG: WHEN ADDING PHOTO TO AN EMPTY DATABASE, IT DOESN'T CREATE A NEW ROW
+		# ISNTEAD: IT RUNS THIS. WORKS FINE AFTER RUNNING AGAIN
 		print("[H, ROW]--> Using existing ROW")
 		curr_photo_index = r.photos[r.photos.size() - 1].id
 		print("[H, ROW]--> NEW CURR_PHOTO_INDEX = ", curr_photo_index)
-
 
 	# start from last photo that couldn't be added to row
 	# end at the last photo in total
@@ -103,8 +105,14 @@ func load_new_row() -> void:
 	if r.photos.size() > 0:
 		row_height_offset = r.position.y + r.curr_height + row_padding_y
 		r.load_images()
+
 		
 	print("[H, ROW] curr_photo_index = ", curr_photo_index)
+
+	if  curr_photo_index > PhotoLoader.photos.size() - 1:
+		return false
+	else:
+		return true
 	
 func _add_row_height_offset(add : int) -> void:
 	row_height_offset += add
@@ -127,8 +135,7 @@ func test4():
 # RESET ALL ROWS
 # START FROM BEGINNING
 func test5():
-	print("DEBUG 5")
-	
+	print("----------------- DEBUG 5 ---------------------")
 	for r in rows:
 		for p in r.photos:
 			r.remove_child(p)
@@ -137,6 +144,15 @@ func test5():
 	rows.clear()
 	row_height_offset = 0
 	curr_photo_index = -1
+	print("XXXX")
+	while load_new_row():
+		pass
+
+
+func resize():
+	win_size = get_viewport().size
+	test5()
+
 
 func _on_file_dialog_files_selected(paths: PackedStringArray) -> void:
 	for i in paths:
