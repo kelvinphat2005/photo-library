@@ -47,12 +47,10 @@ func add_photo(path : String, name = null) -> void:
 		})
 	print(str_query)
 	db.query(str_query)
-	print(db.query_result)
 	
-	# if there is a duplicate photo (photos share same path), db.query_result will equal []
-	# DO NOT MARK PHOTO_LOADER TO LOAD NEW PHOTO IF THERE IS A DUPLICATE PHOTO
-	if db.query_result != []:
-		PhotoLoader.db_changed = true
+	# TODO: PREVENT DUPLICATES
+
+	PhotoLoader.db_changed = true
 	
 # give a photo a tag using it's ID
 # input: list of strings
@@ -87,6 +85,6 @@ func get_photo(photo_id) -> Image:
 	var out = Image.load_from_file(path)
 	return out
 
-func make_photo(photo_id) -> Photo:
+func make_photo(photo_id) -> PhotoTile:
 	var p = Database.get_photo(photo_id)
-	return Photo.new(p.get_size().x, p.get_size().y, photo_id, get_photo_path(photo_id))
+	return PhotoTile.new(p.get_size().x, p.get_size().y, photo_id, get_photo_path(photo_id))

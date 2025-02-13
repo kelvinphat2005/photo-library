@@ -18,7 +18,7 @@ func _init(iwidth):
 # if the width of the photo is too large, scale all photos (incl. photo being added)
 # so that all the photos are able to fit within the row without spilling
 # if row is already filled to the max, do not add and return false else return true
-func add_photo(photo : Photo) -> bool:
+func add_photo(photo : PhotoTile) -> bool:
 	
 	photo.resize(photo.calc_new_x(starting_height),starting_height)
 	
@@ -37,7 +37,7 @@ func add_photo(photo : Photo) -> bool:
 		available_width -= img_padding
 	
 	if (available_width < 5): 
-		# print("MAKING ROOM FOR NEW IMAGE")
+		print("MAKING ROOM FOR NEW IMAGE")
 		# print("New photo current width: ", photo.x)
 		photos.append(photo)
 		# FILL WHOLE ROW W/ IMAGES

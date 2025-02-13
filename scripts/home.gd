@@ -14,7 +14,7 @@ var row_height_offset : int = 0
 @export var row_padding_y : int = 8
 
 # the index of the photo to be loaded next
-var curr_photo_index : int = -1
+var curr_photo_index : int = 0
 var curr_photo_id_offset : int = 0
 
 var prev_window_length : int
@@ -69,22 +69,24 @@ func load_new_row():
 	var r : Row
 	# get last row
 	if rows.size() > 0:
+		print("[H, ROW] GETTING LAST ROW")
 		r = rows[rows.size() - 1]
 	if rows.size() == 0 or r.full:
 		print("[H, ROW]--> Creating new ROW")
 		# if no rows, create new row
 		# if prev row is full, create new row
 		r = Row.new(win_size.x)
-		rows.append(r)
-		add_child(r)
-		r.position.y += row_height_offset
-		# make it so the rows don't over lap
-		curr_photo_index += 1
 		
-	else:
+		# make it so the rows don't over lap
+		r.position.y += row_height_offset
+		
+		# curr_photo_index += 1
+		
+	elif r:
 		# BUG: WHEN ADDING PHOTO TO AN EMPTY DATABASE, IT DOESN'T CREATE A NEW ROW
 		# ISNTEAD: IT RUNS THIS. WORKS FINE AFTER RUNNING AGAIN
 		print("[H, ROW]--> Using existing ROW")
+		print("[H, ROW]--> size: ", r.photos.size())
 		curr_photo_index = r.photos[r.photos.size() - 1].id
 		print("[H, ROW]--> NEW CURR_PHOTO_INDEX = ", curr_photo_index)
 
@@ -93,11 +95,11 @@ func load_new_row():
 	# curr_photo_id is the ID not index of photo
 	# subtract 1 from curr_photo_id because the corresponding index is always -1 of the id
 	print("[H, ROW]--X> ", curr_photo_index, " ", PhotoLoader.photos.size() - 1)
-	for i in range(curr_photo_index, PhotoLoader.photos.size()):
-		print("[H, ROW]--> ", curr_photo_index, " ", PhotoLoader.photos.size() - 1, " ", i)
-		curr_photo_index = i
-		var p = PhotoLoader.photos[i]
-		
+	# for i in range(curr_photo_index, PhotoLoader.photos.size()):
+	while curr_photo_index < PhotoLoader.photos.size():
+		print("[H, ROW]--> ", curr_photo_index, " ", PhotoLoader.photos.size() - 1, " ", curr_photo_index)
+		var p = PhotoLoader.photos[curr_photo_index]
+		curr_photo_index += 1
 		# stop if row is full
 		if not r.add_photo(p):
 			print("[H, ROW]--> ROW IS FULL")
@@ -105,10 +107,15 @@ func load_new_row():
 			break
 		
 	if r.photos.size() > 0:
+		add_child(r)
+		print("[H, ROW]--> ADDED ROW TO ROWS")
 		row_height_offset = r.position.y + r.curr_height + row_padding_y
 		r.load_images()
-
-		
+		rows.append(r)
+	else:
+		print("[H, ROW]--> DIDNT ADD ROW TO ROWS, SIZE < 1")
+	
+	
 	print("[H, ROW] curr_photo_index = ", curr_photo_index)
 
 	if  curr_photo_index > PhotoLoader.photos.size() - 1:
@@ -145,7 +152,7 @@ func test5():
 		r.queue_free()
 	rows.clear()
 	row_height_offset = 0
-	curr_photo_index = -1
+	curr_photo_index = 0
 	print("XXXX")
 	while load_new_row():
 		pass

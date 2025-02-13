@@ -30,7 +30,7 @@ func _process(delta: float) -> void:
 				var path = row["path"]
 				# load image object to get image information
 				var image = Image.load_from_file(path)
-				var new_photo = Photo.new(image.get_size().x, image.get_size().y, row["id"], path)
+				var new_photo = PhotoTile.new(image.get_size().x, image.get_size().y, row["id"], path)
 				photos.append(new_photo)
 				curr_id = row["id"]
 				Database.num_of_photos += 1
@@ -63,7 +63,7 @@ func add_photo(result):
 	var path = result[0]["path"]
 	# load image object to get image information
 	var image = Image.load_from_file(path)
-	var new_photo = Photo.new(image.get_size().x, image.get_size().y, result[0]["id"], path)
+	var new_photo = PhotoTile.new(image.get_size().x, image.get_size().y, result[0]["id"], path)
 	photos.append(new_photo)
 	curr_id = result[0]["id"]
 	
