@@ -6,38 +6,42 @@ var photo : Photo # Photo that is being previewed
 
 var photo_preview_pos : Vector2
 
-@onready var preview_photo : Photo
+@onready var preview_photo : Photo = Photo.new(-1,-1,0,"")
 @export var camera : Camera2D
+@export var background : MeshInstance2D
 
 # TODO: ENABLE/DISABLE CAMERA MOVEMENT WHEN IMAGE IS BEING PREVIEWED
 
-func _init():
-	preview_photo = Photo.new(-1,-1,0,"")
-	add_child(preview_photo)
-
 func _ready() -> void:
-	get_tree().get_root().size_changed.connect(resize)
+	self.visible = false
+	add_child(preview_photo)
+	
 	win_size = get_viewport().size
+	
+	SignalBus.connect("_photo_tile_clicked", show)
+	get_tree().get_root().size_changed.connect(resize)
 
 func _process(delta) -> void:
-	
 	if Input.is_action_just_released("debug_0"):
-		test()
-
+		show(PhotoLoader.photos[0])
 	
-func test():
-	print("DEBUG 0")
-	set_photo(PhotoLoader.photos[0])
-	center_preview()
+func show(photo):
+	print("[IMG PREV] ----------- show() ---------")
+	win_size = get_viewport().size
+	
+	set_photo(photo)
+	self.visible = true
+	background.scale = win_size
+	
 	
 # places the preview in the center of the screen
 # no matter windowsize or scroll position
 func center_preview() -> void:
+	win_size = get_viewport().size
 	print("[IMG PREV] center_preview()")
-	# preview_photo.offset = win_size / 2
-	preview_photo.position.y = camera.position.y + win_size.y / 2
-	
-	preview_photo.position.x = int(win_size.x) / 2
+	self.position.y = camera.position.y + win_size.y / 2	
+	self.position.x = int(win_size.x) / 2
+	preview_photo.position.x = camera.position.x
 
 # Set the current preview photo to said photo
 func set_photo(photo : Photo) -> void:
@@ -54,13 +58,28 @@ func set_photo(photo : Photo) -> void:
 	preview_photo.aspect_ratio = photo.aspect_ratio
 	preview_photo.aspect_ratio_r = photo.aspect_ratio_r
 	# scale photo to fill screen
-	resize()
+	resize(100)
 	
-func resize() -> void:
+func resize(x_padding = 0) -> void:
+	center_preview()
 	print("[IMG PREV] resize()")
+	print("[IMG PREV] Window size: ", win_size.x, "x", win_size.y)
 	win_size = get_viewport().size
+	
+
 	if preview_photo.id > 0:
-		print("d")
-		var new_x = preview_photo.calc_new_x(win_size.y)
-		preview_photo.resize(new_x, win_size.y)
+		
+		var new_x = preview_photo.calc_new_x(win_size.y) 
+
+		# check if the image is too large
+		if new_x > win_size.x - x_padding:
+			# TOO LONG
+			var new_y = preview_photo.calc_new_y(win_size.x - x_padding) # photo fit in 
+			preview_photo.resize(win_size.x - x_padding, new_y)
+
+			
+		else:
+			preview_photo.resize(new_x, win_size.y)
+		
+		
 		

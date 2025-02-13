@@ -5,11 +5,13 @@ func _input(event):
 	# DETECT IF PHOTO IS CLICKED
 	if event.is_action_pressed("click"):
 		if is_pixel_opaque(get_local_mouse_position()):
-			pass
+			SignalBus._photo_tile_clicked.emit(self)
 			
 func _process(delta):
 	# DETECT IF MOUSE IS HOVERING OVER PHOTO
+	var tween = get_tree().create_tween()
 	if is_pixel_opaque(get_local_mouse_position()):
-		modulate = Color(.5, .5, .5) # darken photo
+		tween.tween_property(self, "modulate", Color(.5, .5, .5), .2)
 	else:
-		modulate = Color(1, 1, 1) # reset photo coloring
+		tween.tween_property(self, "modulate", Color(1, 1, 1), .1)
+	tween.tween_callback(tween.kill)

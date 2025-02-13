@@ -11,6 +11,7 @@ var num_of_photos_on_launch : int
 
 var curr_id : int = -1
 
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if active:

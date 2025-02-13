@@ -1,7 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8cn8wlb0lio6"]
+[gd_scene load_steps=6 format=3 uid="uid://c8cn8wlb0lio6"]
 
 [ext_resource type="Script" path="res://scripts/home.gd" id="2_5hpul"]
 [ext_resource type="Script" path="res://scripts/Image_Preview.gd" id="2_nd6x1"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_rgv2o"]
+
+[sub_resource type="Gradient" id="Gradient_o4l1t"]
+colors = PackedColorArray(0, 0, 0, 1, 0.0481928, 0.0481928, 0.0481928, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pnnmk"]
+gradient = SubResource("Gradient_o4l1t")
+width = 1
 
 [node name="Test2" type="Node2D"]
 
@@ -9,15 +18,21 @@
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
 
-[node name="ImagePreview" type="Node2D" parent="." node_paths=PackedStringArray("camera")]
-z_index = 1
+[node name="ImagePreview" type="Node2D" parent="." node_paths=PackedStringArray("camera", "background")]
+z_index = 5
 script = ExtResource("2_nd6x1")
 camera = NodePath("../Camera2D")
+background = NodePath("MeshInstance2D")
 
-[node name="Home" type="Node2D" parent="." node_paths=PackedStringArray("camera", "file_dialog")]
+[node name="MeshInstance2D" type="MeshInstance2D" parent="ImagePreview"]
+mesh = SubResource("QuadMesh_rgv2o")
+texture = SubResource("GradientTexture1D_pnnmk")
+
+[node name="Home" type="Node2D" parent="." node_paths=PackedStringArray("camera", "file_dialog", "row_node")]
 script = ExtResource("2_5hpul")
 camera = NodePath("../Camera2D")
 file_dialog = NodePath("FileDialog")
+row_node = NodePath("Rows")
 
 [node name="FileDialog" type="FileDialog" parent="Home"]
 title = "Open a File"
@@ -25,6 +40,8 @@ size = Vector2i(303, 180)
 ok_button_text = "Open"
 file_mode = 0
 access = 2
+
+[node name="Rows" type="Node2D" parent="Home"]
 
 [connection signal="file_selected" from="Home/FileDialog" to="Home" method="_on_file_dialog_file_selected"]
 [connection signal="files_selected" from="Home/FileDialog" to="Home" method="_on_file_dialog_files_selected"]

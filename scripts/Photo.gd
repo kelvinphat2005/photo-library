@@ -49,11 +49,12 @@ func resize(new_x, new_y) -> void:
 	print("[PHOTO, RESIZE] ", x, "x", y)
 	print("[PHOTO, RESIZE] ", new_x, "x", new_y)
 	print("[PHOTO, RESIZE] x_scale: ", x_scale, " | y_scale: ", y_scale)
-	scale.x *= x_scale
-	scale.y *= y_scale
+	
 	x *= float(x_scale)
 	y *= float(y_scale)
-	
+
+	scale.x *= x_scale
+	scale.y *= y_scale
 	
 	print("x: ", x, " | y: ", y)
 

@@ -8,6 +8,7 @@ var y_pos : float = 0
 var win_size : Vector2i
 
 # row attributes
+@export var row_node : Node2D
 var rows : Array # stores array of all rows
 var curr_row : int = 0 # the index of the row to be loaded next
 var row_height_offset : int = 0
@@ -43,6 +44,7 @@ func _process(delta):
 	
 	# align camera with the images
 	# by default the photos start at the very top left
+	# camera and photos are on the same plane
 	camera.offset.x = win_size.x / 2
 	camera.offset.y = win_size.y / 2
 	
@@ -50,12 +52,15 @@ func _process(delta):
 	#print(camera.position.y)
 	if not camera_lock:
 		if Input.is_action_just_released("scroll_up"):
-			camera.position.y -= px_per_scroll
-			# prevents camera from going too far up
-			camera.position.y = clamp(camera.position.y, 0, 1000000)
+			print("SU")
+			row_node.position.y += px_per_scroll
+			#row_node.position.y = clamp(row_node.position.y, 0, 1000000)
 		if Input.is_action_just_released("scroll_down"):
-			camera.position.y += px_per_scroll
-		y_pos = camera.position.y
+			print("SD")
+			row_node.position.y -= px_per_scroll
+			# prevents camera from going too far up
+			
+		y_pos = row_node.position.y
 
 func load_new_row():
 	print("[H, ROW]---------NEW CALL-------------")
@@ -107,7 +112,7 @@ func load_new_row():
 			break
 		
 	if r.photos.size() > 0:
-		add_child(r)
+		row_node.add_child(r)
 		print("[H, ROW]--> ADDED ROW TO ROWS")
 		row_height_offset = r.position.y + r.curr_height + row_padding_y
 		r.load_images()
@@ -148,7 +153,7 @@ func test5():
 	for r in rows:
 		for p in r.photos:
 			r.remove_child(p)
-		remove_child(r)
+		row_node.remove_child(r)
 		r.queue_free()
 	rows.clear()
 	row_height_offset = 0
