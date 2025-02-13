@@ -1,6 +1,7 @@
 extends Node
 
 @export var camera : Camera2D
+var camera_lock : bool = false # enables camera movement
 @export var file_dialog : FileDialog
 @export var px_per_scroll : int = 35
 var y_pos : float = 0
@@ -47,13 +48,14 @@ func _process(delta):
 	
 	
 	#print(camera.position.y)
-	if Input.is_action_just_released("scroll_up"):
-		camera.position.y -= px_per_scroll
-		# prevents camera from going too far up
-		camera.position.y = clamp(camera.position.y, 0, 1000000)
-	if Input.is_action_just_released("scroll_down"):
-		camera.position.y += px_per_scroll
-	y_pos = camera.position.y
+	if not camera_lock:
+		if Input.is_action_just_released("scroll_up"):
+			camera.position.y -= px_per_scroll
+			# prevents camera from going too far up
+			camera.position.y = clamp(camera.position.y, 0, 1000000)
+		if Input.is_action_just_released("scroll_down"):
+			camera.position.y += px_per_scroll
+		y_pos = camera.position.y
 
 func load_new_row():
 	print("[H, ROW]---------NEW CALL-------------")
@@ -150,7 +152,7 @@ func test5():
 
 
 func resize():
-	win_size = get_viewport().size
+	win_size = get_viewport().size # updating this on process doesn't guarantee the right values
 	test5()
 
 
@@ -160,3 +162,6 @@ func _on_file_dialog_files_selected(paths: PackedStringArray) -> void:
 
 func _on_file_dialog_file_selected(path: String) -> void:
 	Database.add_photo(path)
+
+func change_camera_lock(mode : bool):
+	camera_lock = mode

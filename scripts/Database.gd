@@ -36,6 +36,7 @@ func create_database() -> void:
 
 # add a photo to the database
 func add_photo(path : String, name = null) -> void:
+	print("[DB] add_photo():")
 	var date = Time.get_date_string_from_system()
 	# default name will be file name
 	if name == null:
@@ -46,8 +47,12 @@ func add_photo(path : String, name = null) -> void:
 		})
 	print(str_query)
 	db.query(str_query)
+	print(db.query_result)
 	
-	PhotoLoader.db_changed = true
+	# if there is a duplicate photo (photos share same path), db.query_result will equal []
+	# DO NOT MARK PHOTO_LOADER TO LOAD NEW PHOTO IF THERE IS A DUPLICATE PHOTO
+	if db.query_result != []:
+		PhotoLoader.db_changed = true
 	
 # give a photo a tag using it's ID
 # input: list of strings

@@ -58,10 +58,9 @@ func fill() -> void:
 	var used_width = width - available_width
 	var new_scale = float(width)/(used_width + img_padding)
 	
-	var prev_height = curr_height # TODO 2
+
 
 	# TODO IF SCALE IS TOO LOW, REDO CHANGES
-	# DONT ADD IMAGE
 
 	# now resize all photos using new scale
 	for p in photos:
@@ -76,14 +75,8 @@ func fill() -> void:
 	# print("Available width: ", available_width)
 	curr_height = photos[0].y
 	
-	# TODO 2
-	#var height_diff = curr_height + prev_height 
-	# SignalBus.emit_signal("_update_row_height_offset", height_diff)
-	
 	full = true
-	
-	# TODO 2: IN HOME.GD, ROW_HEIGHT_OFFSET ISNT BEING UPDATED SO NEW ROWS WILL
-	# BE IN THE WRONG IMAGES
+
 	pass
 
 # remove last photo at the highest index

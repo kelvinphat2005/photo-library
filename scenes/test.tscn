@@ -1,11 +1,37 @@
 [gd_scene load_steps=4 format=3 uid="uid://cd5vfyg0oa3yb"]
 
-[ext_resource type="Script" path="res://scripts/test.gd" id="1_ewex6"]
 [ext_resource type="Script" path="res://scripts/home.gd" id="2_ysgod"]
 [ext_resource type="Texture2D" uid="uid://5chdrr5g80u5" path="res://test photos/64337772_p0.jpg" id="3_t4y0i"]
 
+[sub_resource type="GDScript" id="GDScript_57j7j"]
+script/source = "extends Node
+
+var db
+
+func b():
+	
+	Database.create_database()
+	db = Database.db
+	
+	db.open_db()
+	
+	Database.add_photo(\"res://test photos/59274989_p0.jpg\")
+	Database.add_photo(\"res://test photos/59810770_p0.jpg\")
+	Database.add_photo(\"res://test photos/62979889_p0.jpg\")
+	Database.add_photo(\"res://test photos/63964902_p0.jpg\")
+	Database.add_photo(\"res://test photos/64337772_p0.jpg\")
+	Database.add_photo(\"res://test photos/66103386_p0.jpg\")
+	Database.add_photo(\"res://test photos/68085513_p0.jpg\")
+	Database.add_photo(\"res://test photos/71315620_p0.jpg\")
+	
+
+	print(Database.get_photo(1).get_size())
+	
+	db.close_db()
+"
+
 [node name="test" type="Node2D"]
-script = ExtResource("1_ewex6")
+script = SubResource("GDScript_57j7j")
 
 [node name="Home" type="Node2D" parent="." node_paths=PackedStringArray("camera")]
 script = ExtResource("2_ysgod")

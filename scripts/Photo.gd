@@ -46,8 +46,9 @@ func resize(new_x, new_y) -> void:
 	# var y_scale = float(new_y)/original_y
 	var x_scale = float(new_x)/x
 	var y_scale = float(new_y)/y
-	
-	print("x_scale: ", x_scale, " | y_scale: ", y_scale)
+	print("[PHOTO, RESIZE] ", x, "x", y)
+	print("[PHOTO, RESIZE] ", new_x, "x", new_y)
+	print("[PHOTO, RESIZE] x_scale: ", x_scale, " | y_scale: ", y_scale)
 	scale.x *= x_scale
 	scale.y *= y_scale
 	x *= float(x_scale)
@@ -65,12 +66,20 @@ func load_img() -> bool:
 	return false
 
 func _input(event):
+	# DETECT IF PHOTO IS CLICKED
 	if event.is_action_pressed("click"):
 		if is_pixel_opaque(get_local_mouse_position()):
 			pass
 			
 func _process(delta):
+	# DETECT IF MOUSE IS HOVERING OVER PHOTO
 	if is_pixel_opaque(get_local_mouse_position()):
-		visible = false
+		modulate = Color(.5, .5, .5) # darken photo
 	else:
-		visible = true
+		modulate = Color(1, 1, 1) # reset photo coloring
+
+func get_x():
+	return x
+	
+func get_y():
+	return y

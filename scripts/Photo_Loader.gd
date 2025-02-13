@@ -58,8 +58,8 @@ func _process(delta: float) -> void:
 			
 			
 func add_photo(result):
-	# BUG: IF ADDING DUPLICATE ( SAME PATH)
-	# THIS FAILS!!!
+	# IF ADDING DUPLICATE PHOTO AND DB_CHANGED IS MARKED TRUE:
+	# THIS WILL BE RUN AND PROGRAM WIL FAIL!!
 	var path = result[0]["path"]
 	# load image object to get image information
 	var image = Image.load_from_file(path)

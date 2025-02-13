@@ -1,20 +1,23 @@
 [gd_scene load_steps=3 format=3 uid="uid://c8cn8wlb0lio6"]
 
-[ext_resource type="Script" path="res://scripts/test2.gd" id="1_5tyfg"]
 [ext_resource type="Script" path="res://scripts/home.gd" id="2_5hpul"]
+[ext_resource type="Script" path="res://scripts/Image_Preview.gd" id="2_nd6x1"]
 
 [node name="Test2" type="Node2D"]
-script = ExtResource("1_5tyfg")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+position_smoothing_speed = 20.0
+
+[node name="ImagePreview" type="Node2D" parent="." node_paths=PackedStringArray("camera")]
+z_index = 1
+script = ExtResource("2_nd6x1")
+camera = NodePath("../Camera2D")
 
 [node name="Home" type="Node2D" parent="." node_paths=PackedStringArray("camera", "file_dialog")]
 script = ExtResource("2_5hpul")
-camera = NodePath("Camera2D")
+camera = NodePath("../Camera2D")
 file_dialog = NodePath("FileDialog")
-
-[node name="Camera2D" type="Camera2D" parent="Home"]
-offset = Vector2(960, 600)
-position_smoothing_enabled = true
-position_smoothing_speed = 20.0
 
 [node name="FileDialog" type="FileDialog" parent="Home"]
 title = "Open a File"
