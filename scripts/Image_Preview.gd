@@ -23,7 +23,7 @@ func _ready() -> void:
 
 func _process(delta) -> void:
 	if Input.is_action_just_released("debug_0"):
-		show(PhotoLoader.photos[0])
+		self.visible = false
 	
 func show(photo):
 	print("[IMG PREV] ----------- show() ---------")
@@ -58,28 +58,39 @@ func set_photo(photo : Photo) -> void:
 	preview_photo.aspect_ratio = photo.aspect_ratio
 	preview_photo.aspect_ratio_r = photo.aspect_ratio_r
 	# scale photo to fill screen
-	resize(100)
-	
-func resize(x_padding = 0) -> void:
+	resize(000, 000)
+
+# resize photo to fit the screen
+# photo by default is centered
+# lpadding adds padding to left, rpadding adds padding to the right
+# ---> this is useful for photos that are wide
+func resize(lpadding = 0, rpadding = 0) -> void:
 	center_preview()
 	print("[IMG PREV] resize()")
 	print("[IMG PREV] Window size: ", win_size.x, "x", win_size.y)
 	win_size = get_viewport().size
 	
-
+	var total_x_padding = lpadding + rpadding
+	
 	if preview_photo.id > 0:
 		
 		var new_x = preview_photo.calc_new_x(win_size.y) 
 
 		# check if the image is too large
-		if new_x > win_size.x - x_padding:
+		if new_x > win_size.x - total_x_padding:
 			# TOO LONG
-			var new_y = preview_photo.calc_new_y(win_size.x - x_padding) # photo fit in 
-			preview_photo.resize(win_size.x - x_padding, new_y)
-
-			
+			var new_y = preview_photo.calc_new_y(win_size.x - total_x_padding) # photo fit in 
+			preview_photo.resize(win_size.x - total_x_padding, new_y)
 		else:
 			preview_photo.resize(new_x, win_size.y)
-		
+			
+		# since image is centered, there is already some "padding"
+		# calculate that number
+		var curr_lpadding = total_x_padding / 2
+		var curr_rpadding = total_x_padding / 2
+		# determine how much more padding to add to hit target
+		var difference = lpadding - curr_lpadding
+		preview_photo.position.x += difference
+
 		
 		
