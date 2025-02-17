@@ -42,6 +42,8 @@ func _process(delta):
 		test4()
 	if Input.is_action_just_released("debug_5"):
 		test5()
+	if Input.is_action_just_released("debug_9"):
+		test9()
 	
 	# align camera with the images
 	# by default the photos start at the very top left
@@ -53,11 +55,11 @@ func _process(delta):
 	#print(camera.position.y)
 	if not camera_lock:
 		if Input.is_action_just_released("scroll_up"):
-			print("SU")
+			#print("SU")
 			row_node.position.y += px_per_scroll
 			#row_node.position.y = clamp(row_node.position.y, 0, 1000000)
 		if Input.is_action_just_released("scroll_down"):
-			print("SD")
+			#print("SD")
 			row_node.position.y -= px_per_scroll
 			# prevents camera from going too far up
 			
@@ -146,6 +148,20 @@ func test4():
 	var r = rows[0]
 	r.fill()
 	r.load_images()
+
+var buh = false
+var cuh
+func test9():
+	print("----------------- DEBUG 9 ---------------------")
+	if not buh:
+		var v = VerticalItemContainer.new(win_size.x, win_size.y)
+		v.ratios = [50,50]
+		add_child(v)
+		cuh = v
+		
+	var b = Button.new()
+	buh = true
+	cuh.add_item(b)
 
 # RESET ALL ROWS
 # START FROM BEGINNING

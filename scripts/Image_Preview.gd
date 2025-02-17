@@ -1,5 +1,7 @@
 extends Node
 class_name ImagePreview
+# WHAT THE IMAGE ACTUALLY SHOWS
+
 
 var win_size 
 var photo : Photo # Photo that is being previewed
@@ -9,6 +11,7 @@ var photo_preview_pos : Vector2
 @onready var preview_photo : Photo = Photo.new(-1,-1,0,"")
 @export var camera : Camera2D
 @export var background : MeshInstance2D
+@export var item_details : MeshInstance2D
 
 # TODO: ENABLE/DISABLE CAMERA MOVEMENT WHEN IMAGE IS BEING PREVIEWED
 
@@ -22,6 +25,7 @@ func _ready() -> void:
 	get_tree().get_root().size_changed.connect(resize)
 
 func _process(delta) -> void:
+	background.scale = win_size
 	if Input.is_action_just_released("debug_0"):
 		self.visible = false
 		Global.photo_tile_interact = true

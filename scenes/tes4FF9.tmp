@@ -45,7 +45,9 @@ texture = SubResource("GradientTexture1D_ne5wd")
 script = ExtResource("2_5hpul")
 camera = NodePath("../Camera2D")
 file_dialog = NodePath("FileDialog")
+px_per_scroll = null
 row_node = NodePath("Rows")
+row_padding_y = null
 
 [node name="FileDialog" type="FileDialog" parent="Home"]
 title = "Open a File"
@@ -55,10 +57,6 @@ file_mode = 0
 access = 2
 
 [node name="Rows" type="Node2D" parent="Home"]
-
-[node name="Button" type="Button" parent="."]
-offset_right = 225.0
-offset_bottom = 137.0
 
 [connection signal="file_selected" from="Home/FileDialog" to="Home" method="_on_file_dialog_file_selected"]
 [connection signal="files_selected" from="Home/FileDialog" to="Home" method="_on_file_dialog_files_selected"]
