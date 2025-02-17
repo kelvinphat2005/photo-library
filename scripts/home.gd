@@ -28,6 +28,7 @@ func _ready() -> void:
 	
 	SignalBus.connect("_update_row_height_offset", _add_row_height_offset)
 	get_tree().get_root().size_changed.connect(resize) 
+	Global.photo_tile_interact = true
 
 func _process(delta):
 	win_size = get_viewport().size

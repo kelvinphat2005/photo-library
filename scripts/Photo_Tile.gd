@@ -3,7 +3,7 @@ class_name PhotoTile
 
 func _input(event):
 	# DETECT IF PHOTO IS CLICKED
-	if event.is_action_pressed("click"):
+	if event.is_action_pressed("click") and Global.photo_tile_interact:
 		if is_pixel_opaque(get_local_mouse_position()):
 			SignalBus._photo_tile_clicked.emit(self)
 			

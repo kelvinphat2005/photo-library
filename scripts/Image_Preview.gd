@@ -24,6 +24,7 @@ func _ready() -> void:
 func _process(delta) -> void:
 	if Input.is_action_just_released("debug_0"):
 		self.visible = false
+		Global.photo_tile_interact = true
 	
 func show(photo):
 	print("[IMG PREV] ----------- show() ---------")
@@ -31,6 +32,7 @@ func show(photo):
 	
 	set_photo(photo)
 	self.visible = true
+	Global.photo_tile_interact = false
 	background.scale = win_size
 	
 	
