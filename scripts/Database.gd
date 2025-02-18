@@ -79,6 +79,20 @@ func get_photo_path(photo_id) -> String:
 	print(result)
 
 	return result
+	
+func get_photo_info(photo_id):
+	print("[DB, get_photo_info()] called")
+	var str_query = "SELECT path FROM photos WHERE id = {photo_id}".format({
+		"photo_id": photo_id
+		})
+	print(str_query)
+	db.query(str_query)
+	var result = db.query_result
+	print("RESULT: ", result)
+	result = result[0]
+	print(result)
+
+	return result
 
 func get_photo(photo_id) -> Image:
 	var path = get_photo_path(photo_id)
@@ -86,5 +100,10 @@ func get_photo(photo_id) -> Image:
 	return out
 
 func make_photo(photo_id) -> PhotoTile:
-	var p = Database.get_photo(photo_id)
-	return PhotoTile.new(p.get_size().x, p.get_size().y, photo_id, get_photo_path(photo_id))
+	var p = Database.get_photo_info(photo_id)
+	var new_photo_tile = PhotoTile.new(p.get_size().x, p.get_size().y, p["id"], p["path"])
+	new_photo_tile.description = "" # placeholder
+	new_photo_tile.photo_name = p["name"]
+	new_photo_tile.tags = p["tags"]
+	new_photo_tile.date = p["date"]
+	return new_photo_tile

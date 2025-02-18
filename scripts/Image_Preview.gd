@@ -97,6 +97,3 @@ func resize(lpadding = 0, rpadding = 0) -> void:
 		# determine how much more padding to add to hit target
 		var difference = lpadding - curr_lpadding
 		preview_photo.position.x += difference
-
-		
-		

@@ -14,6 +14,9 @@ var curr_row : int = 0 # the index of the row to be loaded next
 var row_height_offset : int = 0
 @export var row_padding_y : int = 8
 
+# preview information container
+@export var prev_box : Control
+
 # the index of the photo to be loaded next
 var curr_photo_index : int = 0
 var curr_photo_id_offset : int = 0
@@ -155,13 +158,16 @@ func test9():
 	print("----------------- DEBUG 9 ---------------------")
 	if not buh:
 		var v = VerticalItemContainer.new(win_size.x, win_size.y)
-		v.ratios = [50,50]
+		v.ratios = [50,25,25,50]
 		add_child(v)
 		cuh = v
+		v.add_text("Text 1")
+		v.add_text("Text 2")
+		v.add_text("Text 3")
+		v.add_text("Text 4")
 		
-	var b = Button.new()
+	
 	buh = true
-	cuh.add_item(b)
 
 # RESET ALL ROWS
 # START FROM BEGINNING

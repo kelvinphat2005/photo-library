@@ -18,7 +18,7 @@ func _ready() -> void:
 	
 func add_item(input : Control) -> void:
 	print("[IC, add_item()] ADDING: ", input)
-	if ratios.size() < items.size():
+	if ratios.size() <= items.size():
 		print("[IC, add_item()] too many items")
 		return
 	add_child(input)
@@ -31,8 +31,8 @@ func add_item(input : Control) -> void:
 func update_container(input : Control) -> void:
 	pass
 
-func resize():
-	print("[IC, resize()]")
+func resize() -> void:
+	print("[IC, resize()] called")
 	height = get_viewport().size.y
 	width = get_viewport().size.x
 	# very dumb way
@@ -54,3 +54,19 @@ func get_ratio(index : int) -> float:
 		ratio_total += r
 	
 	return float(ratios[index])/ratio_total
+
+func add_text(text : String, text_fill_percent : float = 1) -> Label:
+	
+	var new_text = Label.new()
+	
+	#var new_font = FontVariation.new()
+	
+	#new_text.add_theme_font_override("font", new_font)
+	new_text.add_theme_font_size_override("font_size", 64)
+	new_text.add_theme_color_override("font_color", Color(0,0,0))
+	
+	print("[IC, add_text] adding new RichTextLabel with text: ", text)
+	new_text.text = text
+	
+	add_item(new_text)
+	return new_text

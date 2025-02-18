@@ -30,11 +30,8 @@ func _process(delta: float) -> void:
 				print(row)
 				var path = row["path"]
 				# load image object to get image information
-				var image = Image.load_from_file(path)
-				var new_photo = PhotoTile.new(image.get_size().x, image.get_size().y, row["id"], path)
-				photos.append(new_photo)
-				curr_id = row["id"]
-				Database.num_of_photos += 1
+				
+				add_photo(row)
 			
 			# finished loading all photos
 			num_of_photos_on_launch = Database.num_of_photos
@@ -52,20 +49,24 @@ func _process(delta: float) -> void:
 				var result = Database.db.query_result
 				print("[PL]--> ",result)
 				
-				add_photo(result)
+				add_photo(result[0])
 				num_of_photos_on_launch += 1
 				
 			db_changed = false
 			
-			
+# ADD PHOTO THE PHOTO_LOADER AND CURRENT LOADED PHOTOS
+# INPUT: ROW OF DATABASE
 func add_photo(result):
 	# IF ADDING DUPLICATE PHOTO AND DB_CHANGED IS MARKED TRUE:
-	# THIS WILL BE RUN AND PROGRAM WIL FAIL!!
-	var path = result[0]["path"]
+	# BUG: THIS WILL BE RUN AND PROGRAM WIL FAIL!!
+	var path = result["path"]
 	# load image object to get image information
 	var image = Image.load_from_file(path)
-	var new_photo = PhotoTile.new(image.get_size().x, image.get_size().y, result[0]["id"], path)
-	photos.append(new_photo)
-	curr_id = result[0]["id"]
-	
+	var new_photo_tile = PhotoTile.new(image.get_size().x, image.get_size().y, result["id"], path)
+	new_photo_tile.description = "" # placeholder
+	new_photo_tile.photo_name = result["name"]
+	new_photo_tile.tags = result["tags"]
+	new_photo_tile.date = result["date"]
+	photos.append(new_photo_tile)
+	curr_id = result["id"]
 	Database.num_of_photos += 1

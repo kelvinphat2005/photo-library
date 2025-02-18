@@ -12,6 +12,11 @@ var aspect_ratio_r : float
 # database
 var id : int
 var path : String
+# additional information
+var date : String
+var description : String
+var photo_name : String
+var tags 
 
 
 func  _init(ix, iy, iid, ipath):
