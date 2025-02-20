@@ -13,10 +13,23 @@ var type : Types
 var ratios : PackedInt32Array = []
 var sizes : Dictionary = {} # default
 
-func _init(iwidth : int, iheight : int, type := Types.FIXED) -> void:
+var padding : int = 0
+
+var background : MeshInstance2D
+
+func _init(iwidth : int, iheight : int, type := Types.FIXED, padding : int = 0) -> void:
 	self.width = iwidth
 	self.height = iheight
 	self.type = type
+	self.padding = padding
+	
+	# control node doesnt have offset
+	# just make up for this by moving the node
+	# stuff like label nodes have their pivot on the top left by default
+	position.x += self.width/2
+	position.y += self.height/2
+	
+	
 	
 func _ready() -> void:
 	get_tree().get_root().size_changed.connect(resize) 
@@ -26,8 +39,9 @@ func _ready() -> void:
 func add_item(input : Control, length : int = -1) -> void:
 	print("[IC, add_item()] ADDING: ", input)
 	if ratios.size() <= items.size():
-		print("[IC, add_item()] too many items")
-		return
+		if type == Types.RATIO:
+			print("[IC, add_item()] too many items")
+			return
 	add_child(input)
 	input.visible = self.visible
 	input.size.x = self.width
@@ -46,8 +60,10 @@ func update_container(input : Control) -> void:
 func resize() -> void:
 	print("[IC, resize()] called")
 	if type == Types.RATIO:
+		print("[IC, resize()] RATIO")
 		resize_ratio()
 	elif type == Types.FIXED:
+		print("[IC, resize()] FIXED")
 		resize_fixed()
 		
 func resize_ratio() -> void:
@@ -68,10 +84,28 @@ func resize_ratio() -> void:
 func resize_fixed() -> void:
 	pass
 
+func init_background(texture) -> void:
+	print("[IC, init_background()] called with ", texture)
+	background = MeshInstance2D.new()
+	
+	# Create new mesh
+	var mesh = QuadMesh.new()
+	mesh.size.x = width
+	mesh.size.y = height
+	
+	background.mesh = mesh
+	# Give mesh a texture
+	background.texture = texture
+	
+	add_child(background)
+	
+	
+
 func get_ratio(index : int) -> float:
 	var ratio_total = 0
 	var ratio_size = ratios.size()
 	for r in ratios:
-		ratio_total += r
+		ratio_total += r + padding
+	ratio_total -= padding
 	
 	return float(ratios[index])/ratio_total

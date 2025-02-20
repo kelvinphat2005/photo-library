@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://w5aamkxnccam"]
+
+[ext_resource type="Script" path="res://scenes/test scripts/containertest.gd" id="1_nkn4r"]
+[ext_resource type="Texture2D" uid="uid://dms2b8u87qbm2" path="res://textures/black.tres" id="2_2oxn7"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_kqxky"]
+
+[node name="Containertest" type="Node2D"]
+position = Vector2(29, 27)
+script = ExtResource("1_nkn4r")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+position = Vector2(755, 136)
+scale = Vector2(289.5, 221.5)
+mesh = SubResource("QuadMesh_kqxky")
+texture = ExtResource("2_2oxn7")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
