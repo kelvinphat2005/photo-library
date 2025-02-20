@@ -12,7 +12,7 @@ func update_container(input : Control) -> void:
 		print("[VIC, update_container()] curr_index: ", curr_index, " new_height: ", new_height)
 	elif type == Types.FIXED:
 		var new_height = sizes[input]
-		assert(new_height > 0, "[VIC, update_container()] (new_height > 0) INVALID HEIGHT")
+		assert(new_height > 0, "INVALID HEIGHT")
 		input.size.y = new_height
 	
 	# position Control Nodes in the right position

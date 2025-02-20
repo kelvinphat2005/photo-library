@@ -29,6 +29,7 @@ position_smoothing_enabled = true
 position_smoothing_speed = 20.0
 
 [node name="ImagePreview" type="Node2D" parent="." node_paths=PackedStringArray("camera", "background")]
+visible = false
 z_index = 5
 script = ExtResource("2_nd6x1")
 camera = NodePath("../Camera2D")
@@ -59,6 +60,7 @@ access = 2
 [node name="Rows" type="Node2D" parent="Home"]
 
 [node name="Control" type="Control" parent="." node_paths=PackedStringArray("topheader", "description", "tags", "details", "date", "path")]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("3_oikha")

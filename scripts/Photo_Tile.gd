@@ -11,7 +11,9 @@ func _process(delta):
 	# DETECT IF MOUSE IS HOVERING OVER PHOTO
 	var tween = get_tree().create_tween()
 	if is_pixel_opaque(get_local_mouse_position()):
+		# FADE PHOTO TILE TO BLACK
 		tween.tween_property(self, "modulate", Color(.5, .5, .5), .2)
 	else:
+		# UNDO FADE
 		tween.tween_property(self, "modulate", Color(1, 1, 1), .1)
 	tween.tween_callback(tween.kill)

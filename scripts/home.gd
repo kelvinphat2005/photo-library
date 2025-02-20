@@ -157,7 +157,7 @@ var cuh
 func test9():
 	print("----------------- DEBUG 9 ---------------------")
 	if not buh:
-		var v = VerticalItemContainer.new(win_size.x, win_size.y, ItemContainer.Types.FIXED)
+		var v = HorizontalItemContainer.new(win_size.x, win_size.y / 2, ItemContainer.Types.RATIO)
 		v.ratios = [50,25,25,50]
 		add_child(v)
 		cuh = v
@@ -170,6 +170,8 @@ func test9():
 		b = Button.new()
 		v.add_item(b, 200)
 	
+	cuh.width = get_viewport().size.x
+	cuh.resize()
 	
 	buh = true
 

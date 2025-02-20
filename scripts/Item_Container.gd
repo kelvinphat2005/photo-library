@@ -35,6 +35,7 @@ func add_item(input : Control, length : int = -1) -> void:
 	items.append(input)
 	
 	if type == Types.FIXED:
+		assert(length > 0, "INVALID HEIGHT")
 		sizes[input] = length
 	
 	update_container(input)
@@ -50,8 +51,8 @@ func resize() -> void:
 		resize_fixed()
 		
 func resize_ratio() -> void:
-	height = get_viewport().size.y
-	width = get_viewport().size.x
+	#height = get_viewport().size.y
+	#width = get_viewport().size.x
 	# very dumb way
 	var temp = []
 	for item in items:

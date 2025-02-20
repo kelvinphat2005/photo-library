@@ -11,6 +11,7 @@ var num_of_photos_on_launch : int
 
 var curr_id : int = -1
 
+enum {ID, TAGS}
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -70,3 +71,16 @@ func add_photo(result):
 	photos.append(new_photo_tile)
 	curr_id = result["id"]
 	Database.num_of_photos += 1
+	
+func photo_query(query_input, query_type := ID) -> Array:
+	if query_type == ID:
+		return query_id(query_input)
+	elif query_type == TAGS:
+		return query_tag(query_input)
+	return []
+		
+func query_id(id) -> Array:
+	return []
+	
+func query_tag(tags : Array) -> Array:
+	return []
