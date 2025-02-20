@@ -4,19 +4,26 @@ class_name ItemContainer
 # dimension of container
 var width : int 
 var height : int
-
-var ratios : PackedInt32Array = []
+# keep track of items in container
 var items : Array = []
+# different types of containers
+enum Types {RATIO, FIXED}
+var type : Types
+# variables to keep track of sizes important to each type
+var ratios : PackedInt32Array = []
+var sizes : Dictionary = {} # default
 
-
-func _init(iwidth : int, iheight : int) -> void:
+func _init(iwidth : int, iheight : int, type := Types.FIXED) -> void:
 	self.width = iwidth
 	self.height = iheight
+	self.type = type
 	
 func _ready() -> void:
 	get_tree().get_root().size_changed.connect(resize) 
 	
-func add_item(input : Control) -> void:
+# Types.RATIO = Height does matter, input-length does not matter
+# Types.FIXED = Height does not matter, input-length does matter
+func add_item(input : Control, length : int = -1) -> void:
 	print("[IC, add_item()] ADDING: ", input)
 	if ratios.size() <= items.size():
 		print("[IC, add_item()] too many items")
@@ -26,6 +33,10 @@ func add_item(input : Control) -> void:
 	input.size.x = self.width
 	input.size.y = self.height
 	items.append(input)
+	
+	if type == Types.FIXED:
+		sizes[input] = length
+	
 	update_container(input)
 	
 func update_container(input : Control) -> void:
@@ -33,6 +44,12 @@ func update_container(input : Control) -> void:
 
 func resize() -> void:
 	print("[IC, resize()] called")
+	if type == Types.RATIO:
+		resize_ratio()
+	elif type == Types.FIXED:
+		resize_fixed()
+		
+func resize_ratio() -> void:
 	height = get_viewport().size.y
 	width = get_viewport().size.x
 	# very dumb way
@@ -47,6 +64,9 @@ func resize() -> void:
 		item.size.y = self.height
 		update_container(item)
 
+func resize_fixed() -> void:
+	pass
+
 func get_ratio(index : int) -> float:
 	var ratio_total = 0
 	var ratio_size = ratios.size()
@@ -54,19 +74,3 @@ func get_ratio(index : int) -> float:
 		ratio_total += r
 	
 	return float(ratios[index])/ratio_total
-
-func add_text(text : String, text_fill_percent : float = 1) -> Label:
-	
-	var new_text = Label.new()
-	
-	#var new_font = FontVariation.new()
-	
-	#new_text.add_theme_font_override("font", new_font)
-	new_text.add_theme_font_size_override("font_size", 64)
-	new_text.add_theme_color_override("font_color", Color(0,0,0))
-	
-	print("[IC, add_text] adding new RichTextLabel with text: ", text)
-	new_text.text = text
-	
-	add_item(new_text)
-	return new_text

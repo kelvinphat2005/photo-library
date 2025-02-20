@@ -157,15 +157,19 @@ var cuh
 func test9():
 	print("----------------- DEBUG 9 ---------------------")
 	if not buh:
-		var v = VerticalItemContainer.new(win_size.x, win_size.y)
+		var v = VerticalItemContainer.new(win_size.x, win_size.y, ItemContainer.Types.FIXED)
 		v.ratios = [50,25,25,50]
 		add_child(v)
 		cuh = v
-		v.add_text("Text 1")
-		v.add_text("Text 2")
-		v.add_text("Text 3")
-		v.add_text("Text 4")
-		
+		var b = Button.new()
+		v.add_item(b, 50)
+		b = Button.new()
+		v.add_item(b, 100)
+		b = Button.new()
+		v.add_item(b, 150)
+		b = Button.new()
+		v.add_item(b, 200)
+	
 	
 	buh = true
 
