@@ -26,8 +26,8 @@ func _init(iwidth : int, iheight : int, type := Types.FIXED, padding : int = 0) 
 	# control node doesnt have offset
 	# just make up for this by moving the node
 	# stuff like label nodes have their pivot on the top left by default
-	position.x += self.width/2
-	position.y += self.height/2
+	# position.x += self.width/2
+	# position.y += self.height/2
 	
 	
 	

@@ -5,7 +5,7 @@ var container_height := 1500
 
 var all_containers = []
 
-@onready var background = preload("res://textures/black.tres")
+@onready var background = preload("res://textures/grey.tres")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -61,7 +61,7 @@ func _ready() -> void:
 	
 	all_containers.append(header_container_horizontal)
 	
-	main_container_vertical.init_background(background)
+	#main_container_vertical.init_background(background)
 	
 	add_child(main_container_vertical)
 

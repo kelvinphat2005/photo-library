@@ -10,11 +10,13 @@ position = Vector2(29, 27)
 script = ExtResource("1_nkn4r")
 
 [node name="Label" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = 35.0
+offset_top = 7.0
+offset_right = 75.0
+offset_bottom = 30.0
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-position = Vector2(755, 136)
+position = Vector2(995, 510)
 scale = Vector2(289.5, 221.5)
 mesh = SubResource("QuadMesh_kqxky")
 texture = ExtResource("2_2oxn7")
