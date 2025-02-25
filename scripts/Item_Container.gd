@@ -29,7 +29,11 @@ func _init(iwidth : int, iheight : int, type := Types.FIXED, padding : int = 0) 
 	# position.x += self.width/2
 	# position.y += self.height/2
 	
-	
+func z_index_children(new : int) -> void:
+	for i in items:
+		i.z_index = new
+		if i is ItemContainer:	
+			i.z_index_children(new)
 	
 func _ready() -> void:
 	get_tree().get_root().size_changed.connect(resize) 

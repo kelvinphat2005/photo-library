@@ -61,8 +61,10 @@ func _ready() -> void:
 	
 	all_containers.append(header_container_horizontal)
 	
-	#main_container_vertical.init_background(background)
+	main_container_vertical.init_background(background)
 	
+	main_container_vertical.z_index = 9
+	main_container_vertical.z_index_children(10)
 	add_child(main_container_vertical)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
