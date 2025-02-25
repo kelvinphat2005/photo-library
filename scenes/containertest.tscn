@@ -22,7 +22,13 @@ offset_right = 75.0
 offset_bottom = 30.0
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-position = Vector2(1018.5, 643)
-scale = Vector2(2341, 1552)
+position = Vector2(1018.5, 253)
+scale = Vector2(2341, 772)
 mesh = SubResource("QuadMesh_kqxky")
 texture = ExtResource("2_2oxn7")
+
+[node name="TextEdit" type="TextEdit" parent="."]
+offset_left = 9.0
+offset_top = 649.0
+offset_right = 1776.0
+offset_bottom = 1369.0

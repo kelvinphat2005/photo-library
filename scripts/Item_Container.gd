@@ -94,8 +94,8 @@ func init_background(texture) -> void:
 	
 	# Create new mesh
 	var mesh = QuadMesh.new()
-	mesh.size.x = width
-	mesh.size.y = height
+	mesh.size.x = width * 2
+	mesh.size.y = height * 2
 	
 	background.mesh = mesh
 	# Give mesh a texture

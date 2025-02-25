@@ -1,6 +1,6 @@
 extends Node2D
 
-var container_width := 1500
+var container_width := 600
 var container_height := 1500
 
 var all_containers = []
@@ -34,7 +34,7 @@ func _ready() -> void:
 	header_container_horizontal.add_item(header, 425)
 	
 	# DESCRIPTION
-	var description = Label.new()
+	var description = TextEdit.new()
 	description.text = "Description"
 	description.add_theme_color_override("font_color", Color(0,0,0,1))
 	description.add_theme_font_size_override("font_size", 50)
