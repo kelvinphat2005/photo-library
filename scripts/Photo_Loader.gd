@@ -1,6 +1,7 @@
 extends Node
 
 var photos : Array = []
+var photo_queue : Array =[]
 
 # tracking whether to load more images
 var active : bool = false
@@ -54,6 +55,11 @@ func _process(delta: float) -> void:
 				num_of_photos_on_launch += 1
 				
 			db_changed = false
+			
+func queue_all():
+	photo_queue = []
+	for photo in photos:
+		photo_queue.append(photo)
 			
 # ADD PHOTO THE PHOTO_LOADER AND CURRENT LOADED PHOTOS
 # INPUT: ROW OF DATABASE

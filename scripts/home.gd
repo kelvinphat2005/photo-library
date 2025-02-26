@@ -68,6 +68,37 @@ func _process(delta):
 			
 		y_pos = row_node.position.y
 
+func load_row_queue() -> void:
+	# new row
+	var r := Row.new(win_size.x)
+	
+	var finished : bool = false
+	var index : int = 0
+	
+	while not index >= PhotoLoader.photo_queue.size():
+		var curr_photo = PhotoLoader.photo_queue[index]
+		if not r.add_photo(curr_photo):
+			print("[HOME, LRQ()] row full")
+			r.position.y += row_height_offset
+			row_node.add_child(r)
+			rows.append(r)
+			r.load_images()
+			row_height_offset = r.position.y + r.curr_height + row_padding_y
+			
+			r = Row.new(win_size.x)
+			
+		else:
+			index += 1
+	
+	if r.photos.size() > 0:
+		r.position.y += row_height_offset
+		row_height_offset = r.position.y + r.curr_height + row_padding_y
+		row_node.add_child(r)
+		rows.append(r)
+		r.load_images()
+		
+
+
 func load_new_row():
 	print("[H, ROW]---------NEW CALL-------------")
 	
@@ -152,33 +183,15 @@ func test4():
 	r.fill()
 	r.load_images()
 
-var buh = false
-var cuh
-func test9():
-	print("----------------- DEBUG 9 ---------------------")
-	if not buh:
-		var v = HorizontalItemContainer.new(win_size.x, win_size.y / 2, ItemContainer.Types.RATIO)
-		v.ratios = [50,25,25,50]
-		add_child(v)
-		cuh = v
-		var b = Button.new()
-		v.add_item(b, 50)
-		b = Button.new()
-		v.add_item(b, 100)
-		b = Button.new()
-		v.add_item(b, 150)
-		b = Button.new()
-		v.add_item(b, 200)
-	
-	cuh.width = get_viewport().size.x
-	cuh.resize()
-	
-	buh = true
 
-# RESET ALL ROWS
-# START FROM BEGINNING
-func test5():
-	print("----------------- DEBUG 5 ---------------------")
+func test9():
+	clear_rows()
+	
+	for i in range(0,7):
+		PhotoLoader.photo_queue.append(PhotoLoader.photos[i])
+	load_row_queue()
+
+func clear_rows() -> void:
 	for r in rows:
 		for p in r.photos:
 			r.remove_child(p)
@@ -187,6 +200,12 @@ func test5():
 	rows.clear()
 	row_height_offset = 0
 	curr_photo_index = 0
+
+# RESET ALL ROWS
+# START FROM BEGINNING
+func test5():
+	print("----------------- DEBUG 5 ---------------------")
+	clear_rows()
 	print("XXXX")
 	while load_new_row():
 		pass
