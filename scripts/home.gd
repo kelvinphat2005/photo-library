@@ -23,6 +23,11 @@ var curr_photo_id_offset : int = 0
 
 var prev_window_length : int
 
+# search
+var search_container : HorizontalItemContainer
+var search : TextEdit
+var search_submit : Button
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	Database.create_database()
@@ -44,7 +49,7 @@ func _process(delta):
 	if Input.is_action_just_released("debug_4"):
 		test4()
 	if Input.is_action_just_released("debug_5"):
-		test5()
+		reload_all_rows()
 	if Input.is_action_just_released("debug_9"):
 		test9()
 	
@@ -179,15 +184,13 @@ func test3():
 	r.del_photo()
 	
 func test4():
-	var r = rows[0]
-	r.fill()
-	r.load_images()
+	init_search()
 
 
 func test9():
 	clear_rows()
 	
-	for i in range(0,7):
+	for i in range(0,9):
 		PhotoLoader.photo_queue.append(PhotoLoader.photos[i])
 	load_row_queue()
 
@@ -203,19 +206,52 @@ func clear_rows() -> void:
 
 # RESET ALL ROWS
 # START FROM BEGINNING
-func test5():
+func reload_all_rows() -> void:
 	print("----------------- DEBUG 5 ---------------------")
 	clear_rows()
 	print("XXXX")
 	while load_new_row():
 		pass
 
-
-func resize():
+func resize() -> void:
 	win_size = get_viewport().size # updating this on process doesn't guarantee the right values
-	test5()
+	init_search()
+	reload_all_rows()
 
-
+func init_search() -> void:
+	# init
+	var search_bar_height = 75
+	
+	win_size = get_viewport().size
+	
+	if not search:
+		search = TextEdit.new()
+	if not search_submit:
+		search_submit = Button.new()
+		search_submit.pressed.connect(self._search)
+	if not search_container:
+		search_container = HorizontalItemContainer.new(
+			win_size.x, 				# width
+			search_bar_height,			# height
+			ItemContainer.Types.RATIO	# type
+		)
+		search_container.ratios = [90,10]
+		search_container.add_item(search)
+		search_container.add_item(search_submit)
+		row_node.add_child(search_container)
+		search_container.position.y -= search_bar_height
+	else:
+		search_container.width = win_size.x
+		search_container.resize()
+	
+# when search button pressed
+func _search() -> void:
+	if search.text == "":
+		return
+	
+	print(search.text)
+	search.text = ""
+	
 func _on_file_dialog_files_selected(paths: PackedStringArray) -> void:
 	for i in paths:
 		Database.add_photo(i)

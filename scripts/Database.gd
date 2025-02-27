@@ -22,6 +22,7 @@ func create_database() -> void:
 	photos_dict["date"] = {"data_type": "text"}
 	photos_dict["path"] = {"data_type": "text", "unique": true, "not_null": true}
 	photos_dict["name"] = {"data_type": "text"}
+	photos_dict["description"] = {"data_type": "text"}
 	photos_dict["tags"] = {"data_type": "text"}
 	
 	var albums_dict := Dictionary()
