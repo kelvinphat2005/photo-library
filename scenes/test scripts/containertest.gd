@@ -1,14 +1,16 @@
 extends Node2D
 
-var container_width := 600
-var container_height := 1500
+@export var container_width : int
+@export var container_height : int = 1000
 
 var all_containers = []
 
 @onready var background = preload("res://textures/grey.tres")
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	print("fsdfsdfsdfsdafasdf")
 	var main_container_vertical = VerticalItemContainer.new(
 		container_width,
 		container_height,
@@ -52,12 +54,7 @@ func _ready() -> void:
 	details_info.add_theme_font_size_override("font_size", 50)
 	
 	main_container_vertical.add_item(details_header, 30)
-	main_container_vertical.add_item(details_info, 75)
-	
-	
-	
-	
-	
+	main_container_vertical.add_item(details_info, 75)	
 	
 	all_containers.append(header_container_horizontal)
 	
@@ -66,7 +63,3 @@ func _ready() -> void:
 	main_container_vertical.z_index = 9
 	main_container_vertical.z_index_children(10)
 	add_child(main_container_vertical)
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

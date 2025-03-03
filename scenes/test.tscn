@@ -40,6 +40,7 @@ camera = NodePath("Camera2D")
 [node name="Camera2D" type="Camera2D" parent="Home"]
 
 [node name="64337772P0" type="Sprite2D" parent="."]
+position = Vector2(445, 117)
 scale = Vector2(0.07, 0.07)
 texture = ExtResource("3_t4y0i")
-offset = Vector2(1024, 725)
+centered = false

@@ -8,6 +8,9 @@ var photo : Photo # Photo that is being previewed
 
 var photo_preview_pos : Vector2
 
+@export var details : Node2D
+@export var details_width : int = 500
+
 @onready var preview_photo : Photo = Photo.new(-1,-1,0,"")
 @export var camera : Camera2D
 @export var background : MeshInstance2D
@@ -31,14 +34,19 @@ func _process(delta) -> void:
 		Global.photo_tile_interact = true
 	
 func show(photo):
+	
 	print("[IMG PREV] ----------- show() ---------")
 	win_size = get_viewport().size
 	
-	set_photo(photo)
+	
 	self.visible = true
 	Global.photo_tile_interact = false
 	background.scale = win_size
 	
+	set_photo(photo)
+	
+	var buh = win_size.x - 500
+	details.position.x = buh
 	
 # places the preview in the center of the screen
 # no matter windowsize or scroll position
@@ -64,7 +72,7 @@ func set_photo(photo : Photo) -> void:
 	preview_photo.aspect_ratio = photo.aspect_ratio
 	preview_photo.aspect_ratio_r = photo.aspect_ratio_r
 	# scale photo to fill screen
-	resize(000, 000)
+	resize(000, details_width)
 
 # resize photo to fit the screen
 # photo by default is centered

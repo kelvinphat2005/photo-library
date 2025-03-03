@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://c8cn8wlb0lio6"]
+[gd_scene load_steps=11 format=3 uid="uid://c8cn8wlb0lio6"]
 
 [ext_resource type="Script" path="res://scripts/home.gd" id="2_5hpul"]
+[ext_resource type="PackedScene" uid="uid://w5aamkxnccam" path="res://scenes/containertest.tscn" id="2_8erw1"]
 [ext_resource type="Script" path="res://scripts/Image_Preview.gd" id="2_nd6x1"]
 [ext_resource type="Script" path="res://scripts/info_box.gd" id="3_oikha"]
 
@@ -28,20 +29,31 @@ gradient = SubResource("Gradient_i4svr")
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
 
-[node name="ImagePreview" type="Node2D" parent="." node_paths=PackedStringArray("camera", "background")]
+[node name="ImagePreview" type="Node2D" parent="." node_paths=PackedStringArray("details", "camera", "background")]
 visible = false
 z_index = 5
 script = ExtResource("2_nd6x1")
+details = NodePath("Containertest")
 camera = NodePath("../Camera2D")
-background = NodePath("Background")
+background = NodePath("Control/Background")
 
-[node name="Background" type="MeshInstance2D" parent="ImagePreview"]
+[node name="Control" type="Control" parent="ImagePreview"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Background" type="MeshInstance2D" parent="ImagePreview/Control"]
 mesh = SubResource("QuadMesh_rgv2o")
 texture = SubResource("GradientTexture1D_pnnmk")
 
-[node name="ItemDetails" type="MeshInstance2D" parent="ImagePreview"]
+[node name="ItemDetails" type="MeshInstance2D" parent="ImagePreview/Control"]
 mesh = SubResource("QuadMesh_t1m7v")
 texture = SubResource("GradientTexture1D_ne5wd")
+
+[node name="Containertest" parent="ImagePreview" instance=ExtResource("2_8erw1")]
+position = Vector2(0, 0)
+container_width = 500
 
 [node name="Home" type="Node2D" parent="." node_paths=PackedStringArray("camera", "file_dialog", "row_node", "prev_box")]
 script = ExtResource("2_5hpul")
