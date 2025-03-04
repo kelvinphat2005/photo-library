@@ -74,11 +74,12 @@ func add_photo(result):
 	new_photo_tile.photo_name = result["name"]
 	new_photo_tile.tags = result["tags"]
 	new_photo_tile.date = result["date"]
+	
 	photos.append(new_photo_tile)
 	curr_id = result["id"]
 	Database.num_of_photos += 1
 	
-func photo_query(query_input, query_type := ID) -> Array:
+func photo_query(query_input, query_type := TAGS) -> Array:
 	if query_type == ID:
 		return query_id(query_input)
 	elif query_type == TAGS:
@@ -86,7 +87,28 @@ func photo_query(query_input, query_type := ID) -> Array:
 	return []
 		
 func query_id(id) -> Array:
-	return []
+	var db = Database.db
+	var output = []
 	
-func query_tag(tags : Array) -> Array:
-	return []
+	
+	return output
+	
+func query_tag(tag : String) -> Array:
+	var db = Database.db
+	var output = []
+	
+	var query = "SELECT * FROM photos WHERE tags LIKE '%{tag}%'".format({
+		"tag": tag
+	})
+	print("[PL, query_tag()] querying database: ", query)
+	db.query(query)
+	var result = db.query_result
+	print("[PL, query_tag()] result: ", result)
+	
+	for photo_in_db in result:
+		var index = photo_in_db["id"] - 1
+		output.append(photos[index])
+		
+	print("[PL, query_tag()] output: ", output)
+	
+	return output

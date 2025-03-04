@@ -43,8 +43,8 @@ func add_photo(path : String, name = null) -> void:
 	if name == null:
 		# place holder
 		name = "john_photo"
-	var str_query = "INSERT INTO photos ('path', 'date', 'name', 'tags') VALUES ('{path}', {date}, '{name}', '')".format({
-		"path": path, "date": date, "name":name
+	var str_query = "INSERT INTO photos ('path', 'date', 'name', 'tags', 'description') VALUES ('{path}', {date}, '{name}', '', '{description}')".format({
+		"path": path, "date": date, "name":name, "description": ""
 		})
 	print(str_query)
 	db.query(str_query)

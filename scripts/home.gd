@@ -180,8 +180,21 @@ func test2():
 	file_dialog.popup()
 
 func test3():
-	var r = rows[0]
-	r.del_photo()
+	for p in PhotoLoader.photos:
+		p.reset_tags()
+	
+	PhotoLoader.photos[0].add_tag("buh")
+	PhotoLoader.photos[1].add_tag("pens")
+	PhotoLoader.photos[2].add_tag("buh")
+	PhotoLoader.photos[3].add_tag("pens")
+	PhotoLoader.photos[4].add_tag("pens")
+	PhotoLoader.photos[5].add_tag("buh")
+	PhotoLoader.photos[6].add_tag("skibidi")
+	
+	PhotoLoader.query_tag("buh")
+	PhotoLoader.query_tag("pens")
+	PhotoLoader.query_tag("skibidi")
+
 	
 func test4():
 	init_search()
@@ -250,6 +263,8 @@ func _search() -> void:
 		return
 	
 	print(search.text)
+	
+	# finish
 	search.text = ""
 	
 func _on_file_dialog_files_selected(paths: PackedStringArray) -> void:
