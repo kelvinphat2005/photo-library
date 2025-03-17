@@ -27,6 +27,7 @@ var prev_window_length : int
 var search_container : HorizontalItemContainer
 var search : TextEdit
 var search_submit : Button
+var search_dropdown : OptionButton
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -194,6 +195,9 @@ func test3():
 	PhotoLoader.query_tag("buh")
 	PhotoLoader.query_tag("pens")
 	PhotoLoader.query_tag("skibidi")
+	
+	print("----------------")
+	PhotoLoader.query_tag(["buh", "pens"])
 
 	
 func test4():
@@ -242,13 +246,22 @@ func init_search() -> void:
 	if not search_submit:
 		search_submit = Button.new()
 		search_submit.pressed.connect(self._search)
+	if not search_dropdown:
+		search_dropdown = OptionButton.new()
+		
+		search_dropdown.add_item("AND", 0)
+		search_dropdown.add_item("OR", 1)
+		search_dropdown.add_item("ID", 2)
+		
+		search_dropdown.select(0)
 	if not search_container:
 		search_container = HorizontalItemContainer.new(
 			win_size.x, 				# width
 			search_bar_height,			# height
 			ItemContainer.Types.RATIO	# type
 		)
-		search_container.ratios = [90,10]
+		search_container.ratios = [10,80,10]
+		search_container.add_item(search_dropdown)
 		search_container.add_item(search)
 		search_container.add_item(search_submit)
 		row_node.add_child(search_container)
@@ -262,7 +275,18 @@ func _search() -> void:
 	if search.text == "":
 		return
 	
-	print(search.text)
+	print("Search Bar Text: ", search.text)
+	
+	var searches 
+	searches = search.text.split(",")
+	# last element will contain '\n' so remove.
+	searches[searches.size() - 1].left(searches[searches.size() - 1].length() - 1)
+	print(searches)
+	
+	for search in searches:
+		PhotoLoader.photo_query(searches, PhotoLoader.TAGS)
+		pass
+	
 	
 	# finish
 	search.text = ""

@@ -12,7 +12,7 @@ var num_of_photos_on_launch : int
 
 var curr_id : int = -1
 
-enum {ID, TAGS}
+enum {ID, TAGS, NONE, AND, OR}
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -79,36 +79,68 @@ func add_photo(result):
 	curr_id = result["id"]
 	Database.num_of_photos += 1
 	
-func photo_query(query_input, query_type := TAGS) -> Array:
+func photo_query(query_input, query_type := TAGS, params = NONE) -> Array:
 	if query_type == ID:
-		return query_id(query_input)
+		return query_id(query_input, params)
 	elif query_type == TAGS:
-		return query_tag(query_input)
+		return query_tag(query_input, params)
 	return []
 		
-func query_id(id) -> Array:
+func query_id(id, params = NONE) -> Array:
 	var db = Database.db
 	var output = []
 	
 	
 	return output
 	
-func query_tag(tag : String) -> Array:
+func query_tag(tag, params = NONE) -> Array:
 	var db = Database.db
 	var output = []
 	
-	var query = "SELECT * FROM photos WHERE tags LIKE '%{tag}%'".format({
-		"tag": tag
-	})
-	print("[PL, query_tag()] querying database: ", query)
-	db.query(query)
-	var result = db.query_result
-	print("[PL, query_tag()] result: ", result)
+	if tag is Array:
+		print("[PL, query_tag] XXXX")
+		if tag.size() == 1:
+			tag = tag[0]
 	
-	for photo_in_db in result:
-		var index = photo_in_db["id"] - 1
-		output.append(photos[index])
+	if tag is String:
+		var query = "SELECT * FROM photos WHERE tags LIKE '%{tag}%'".format({
+			"tag": tag
+		})
+		print("[PL, query_tag()] querying database: ", query)
+		db.query(query)
+		var result = db.query_result
+		print("[PL, query_tag()] result: ", result)
 		
-	print("[PL, query_tag()] output: ", output)
+		for photo_in_db in result:
+			var index = photo_in_db["id"] - 1
+			output.append(photos[index])
+			
+		print("[PL, query_tag()] output: ", output)
+	elif tag is Array:
+		print("[PL, query_tag] YYYYY")
+		if params == OR:
+			print("[PL, query_tag] OR search")
+			var dict = {}
+			
+			for t in tag:
+				var query = "SELECT * FROM photos WHERE tags LIKE '%{tag}%'".format({
+					"tag": t
+				})
+				print("[PL, query_tag()] querying database: ", query)
+				db.query(query)
+				var result = db.query_result
+				print("[PL, query_tag()] result: ", result)
+				
+				for photo_in_db in result:
+					var index = photo_in_db["id"] - 1
+					dict[index] = true
+				for val in dict:
+					print("[PL, dict{}] ", val)
+					output.append(photos[val])
+		elif params == AND:
+			pass
+			
+	else:
+		return []
 	
 	return output
