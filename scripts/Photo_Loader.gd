@@ -138,7 +138,23 @@ func query_tag(tag, params = NONE) -> Array:
 					print("[PL, dict{}] ", val)
 					output.append(photos[val])
 		elif params == AND:
-			pass
+			# SELECT * FROM persons WHERE name IN ("John", "Doe");
+			print("[PL, query_tag] AND search")
+			var query = "'"
+			# create query
+			for t in tag:
+				query = query + '%' + t
+			query = query + "%'"
+			query = "SELECT * FROM photos WHERE tags LIKE " + query
+			print("[PL, query_tag()] querying database: ", query)
+			db.query(query)
+			var result = db.query_result
+			print("[PL, query_tag()] result: ", result)
+			for photo_in_db in result:
+				var index = photo_in_db["id"] - 1
+				output.append(photos[index])
+			
+
 			
 	else:
 		return []

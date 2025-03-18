@@ -186,6 +186,7 @@ func test3():
 	
 	PhotoLoader.photos[0].add_tag("buh")
 	PhotoLoader.photos[1].add_tag("pens")
+	PhotoLoader.photos[1].add_tag("buh")
 	PhotoLoader.photos[2].add_tag("buh")
 	PhotoLoader.photos[3].add_tag("pens")
 	PhotoLoader.photos[4].add_tag("pens")
@@ -198,6 +199,8 @@ func test3():
 	
 	print("----------------")
 	PhotoLoader.query_tag(["buh", "pens"])
+	print("----------------")
+	PhotoLoader.query_tag(["pens","buh"], PhotoLoader.AND)
 
 	
 func test4():
