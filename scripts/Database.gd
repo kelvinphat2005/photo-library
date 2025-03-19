@@ -17,14 +17,27 @@ func create_database() -> void:
 	db.path = db_full_path
 	
 	db.open_db()
+	# Dictionary that contains most photo information
 	var photos_dict := Dictionary()
 	photos_dict["id"] = {"data_type": "int", "unique": true, "not_null": true, "primary_key": true}
 	photos_dict["date"] = {"data_type": "text"}
 	photos_dict["path"] = {"data_type": "text", "unique": true, "not_null": true}
 	photos_dict["name"] = {"data_type": "text"}
 	photos_dict["description"] = {"data_type": "text"}
-	photos_dict["tags"] = {"data_type": "text"}
+	# photos_dict["tags"] = {"data_type": "text"}
 	
+	# Dictionary that contains tag information for quicker tag look up
+	# EXAMPLE: A photo id is paired with a tag. It can have multiple instances of the same id
+	var tags_dict_query = "CREATE TABLE 'tags' (
+		'id' INTEGER NOT NULL,
+		'tag' TEXT NOT NULL,
+		UNIQUE(id,tag)
+	);"
+	#var tags_dict := Dictionary()
+	#tags_dict["id"] = {"data_type": "int"}
+	#tags_dict["tag"] = {"data_type": "text"}
+	
+	# Dictionary that contains album information
 	var albums_dict := Dictionary()
 	albums_dict["name"] = {"data_type": "text", "not_null": true}
 	albums_dict["album_id"] = {"data_type": "int", "unique": true, "not_null": true, "primary_key": true}
@@ -32,6 +45,7 @@ func create_database() -> void:
 	album_template["photo_id"] = {"data_type": "int", "unique": true, "not_null": true}
 	
 	db.create_table("photos", photos_dict)
+	db.query(tags_dict_query)
 	db.create_table("albums", albums_dict)
 	db.close_db()
 
@@ -43,7 +57,7 @@ func add_photo(path : String, name = null) -> void:
 	if name == null:
 		# place holder
 		name = "john_photo"
-	var str_query = "INSERT INTO photos ('path', 'date', 'name', 'tags', 'description') VALUES ('{path}', {date}, '{name}', '', '{description}')".format({
+	var str_query = "INSERT INTO photos ('path', 'date', 'name', 'description') VALUES ('{path}', {date}, '{name}', '{description}')".format({
 		"path": path, "date": date, "name":name, "description": ""
 		})
 	print(str_query)
@@ -56,16 +70,14 @@ func add_photo(path : String, name = null) -> void:
 # give a photo a tag using it's ID
 # input: list of strings
 func add_tags(photo_id : int, tags : PackedStringArray) -> void:
-	
-	var tags_to_string = ""
+
 	for tag in tags:
-		tags_to_string = tags_to_string + tag + ","
-	
-	var str_query = "UPDATE photos SET tags = tags || '{tags_to_string}' WHERE id = {photo_id}".format({
-		"tags_to_string": tags_to_string, "photo_id": photo_id
-		})
-	print(str_query)
-	db.query(str_query)
+		
+		var str_query = "INSERT INTO tags ('id','tag') VALUES ('{id}','{tag}')".format({
+			"id": photo_id, "tag": tag
+			})
+		print(str_query)
+		db.query(str_query)
 	
 
 func get_photo_path(photo_id) -> String:

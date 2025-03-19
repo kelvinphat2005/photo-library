@@ -20,10 +20,10 @@ func update_details(photo : PhotoTile):
 	date.append_text("[color=black]{date}[/color]".format({
 		"date":photo.date
 	}))
-	tags.clear()
-	tags.append_text("[color=black]{tags}[/color]".format({
-		"tags":photo.tags
-	}))
+	#tags.clear()
+	#tags.append_text("[color=black]{tags}[/color]".format({
+	#	"tags":photo.tags
+	#}))
 	description.clear()
 	description.append_text("[color=black]{description}[/color]".format({
 		"description":photo.description

@@ -64,7 +64,8 @@ prev_box = NodePath("../Control")
 
 [node name="FileDialog" type="FileDialog" parent="Home"]
 title = "Open a File"
-size = Vector2i(303, 180)
+position = Vector2i(0, 36)
+size = Vector2i(500, 1000)
 ok_button_text = "Open"
 file_mode = 0
 access = 2

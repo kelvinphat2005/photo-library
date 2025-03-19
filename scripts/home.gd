@@ -180,10 +180,7 @@ func test():
 func test2():
 	file_dialog.popup()
 
-func test3():
-	for p in PhotoLoader.photos:
-		p.reset_tags()
-	
+func test3():	
 	PhotoLoader.photos[0].add_tag("buh")
 	PhotoLoader.photos[1].add_tag("pens")
 	PhotoLoader.photos[1].add_tag("buh")

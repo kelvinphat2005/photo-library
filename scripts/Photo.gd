@@ -16,7 +16,7 @@ var path : String
 var date : String
 var description : String
 var photo_name : String
-var tags 
+#var tags 
 
 
 func  _init(ix, iy, iid, ipath):
@@ -72,15 +72,10 @@ func load_img() -> bool:
 	return false
 
 func add_tag(tag : String) -> void:
-	tags += tag + ","
+	# tags += tag + ","
 	Database.add_tags(id, [tag])
 	return
 
-func reset_tags() -> void:
-	tags = ""
-	var str_query = "UPDATE photos SET tags = '' "
-	print("[Photo, reset_tags()] query: ", str_query)
-	Database.db.query(str_query)
 
 func get_x():
 	return x

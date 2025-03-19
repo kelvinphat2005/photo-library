@@ -72,7 +72,7 @@ func add_photo(result):
 	var new_photo_tile = PhotoTile.new(image.get_size().x, image.get_size().y, result["id"], path)
 	new_photo_tile.description = "" # placeholder
 	new_photo_tile.photo_name = result["name"]
-	new_photo_tile.tags = result["tags"]
+	#new_photo_tile.tags = result["tags"]
 	new_photo_tile.date = result["date"]
 	
 	photos.append(new_photo_tile)
@@ -103,7 +103,7 @@ func query_tag(tag, params = NONE) -> Array:
 			tag = tag[0]
 	
 	if tag is String:
-		var query = "SELECT * FROM photos WHERE tags LIKE '%{tag}%'".format({
+		var query = "SELECT id FROM tags WHERE tag == '{tag}'".format({
 			"tag": tag
 		})
 		print("[PL, query_tag()] querying database: ", query)
@@ -111,11 +111,7 @@ func query_tag(tag, params = NONE) -> Array:
 		var result = db.query_result
 		print("[PL, query_tag()] result: ", result)
 		
-		for photo_in_db in result:
-			var index = photo_in_db["id"] - 1
-			output.append(photos[index])
-			
-		print("[PL, query_tag()] output: ", output)
+		
 	elif tag is Array:
 		print("[PL, query_tag] YYYYY")
 		if params == OR:
