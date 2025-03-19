@@ -190,13 +190,13 @@ func test3():
 	PhotoLoader.photos[5].add_tag("buh")
 	PhotoLoader.photos[6].add_tag("skibidi")
 	
-	PhotoLoader.query_tag("buh")
-	PhotoLoader.query_tag("pens")
-	PhotoLoader.query_tag("skibidi")
+	PhotoLoader.query_tag("buh", PhotoLoader.OR)
+	PhotoLoader.query_tag("pens", PhotoLoader.OR)
+	PhotoLoader.query_tag("skibidi", PhotoLoader.OR)
 	
-	print("----------------")
-	PhotoLoader.query_tag(["buh", "pens"])
-	print("----------------")
+	print("-------OR 1---------")
+	PhotoLoader.query_tag(["buh", "pens"], PhotoLoader.OR)
+	print("-------AND 1---------")
 	PhotoLoader.query_tag(["pens","buh"], PhotoLoader.AND)
 
 	

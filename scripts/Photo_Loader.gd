@@ -79,21 +79,21 @@ func add_photo(result):
 	curr_id = result["id"]
 	Database.num_of_photos += 1
 	
-func photo_query(query_input, query_type := TAGS, params = NONE) -> Array:
+func photo_query(query_input, params, query_type := TAGS) -> Array:
 	if query_type == ID:
 		return query_id(query_input, params)
 	elif query_type == TAGS:
 		return query_tag(query_input, params)
 	return []
 		
-func query_id(id, params = NONE) -> Array:
+func query_id(id, params) -> Array:
 	var db = Database.db
 	var output = []
 	
 	
 	return output
 	
-func query_tag(tag, params = NONE) -> Array:
+func query_tag(tag, params) -> Array:
 	var db = Database.db
 	var output = []
 	
@@ -103,56 +103,60 @@ func query_tag(tag, params = NONE) -> Array:
 			tag = tag[0]
 	
 	if tag is String:
-		var query = "SELECT id FROM tags WHERE tag == '{tag}'".format({
-			"tag": tag
-		})
-		print("[PL, query_tag()] querying database: ", query)
-		db.query(query)
-		var result = db.query_result
-		print("[PL, query_tag()] result: ", result)
+		tag = [tag]
 		
-		
-	elif tag is Array:
+	if tag is Array:
 		print("[PL, query_tag] YYYYY")
 		if params == OR:
 			print("[PL, query_tag] OR search")
 			var dict = {}
 			
 			for t in tag:
-				var query = "SELECT * FROM photos WHERE tags LIKE '%{tag}%'".format({
+				var query = "SELECT id FROM tags WHERE tag == '{tag}'".format({
 					"tag": t
 				})
 				print("[PL, query_tag()] querying database: ", query)
 				db.query(query)
 				var result = db.query_result
 				print("[PL, query_tag()] result: ", result)
-				
+		
+				# PREVENT DUPLICATES
 				for photo_in_db in result:
 					var index = photo_in_db["id"] - 1
 					dict[index] = true
-				for val in dict:
+			# ADD PHOTOS TO OUTPUT
+			for val in dict:
+				print("[PL, dict{}] ", val)
+				output.append(photos[val])
+					
+		elif params == AND:
+			print("[PL, query_tag] AND search")
+			var dict = {}
+			var val_to_match = tag.size()
+			
+			for t in tag:
+				var query = "SELECT id FROM tags WHERE tag == '{tag}'".format({
+					"tag": t
+				})
+				print("[PL, query_tag()] querying database: ", query)
+				db.query(query)
+				var result = db.query_result
+				print("[PL, query_tag()] result: ", result)
+				for photo_in_db in result:
+					var index = photo_in_db["id"] - 1
+					if dict.has(index):
+						dict[index] += 1
+					else:
+						dict[index] = 1
+			for val in dict:
+				if dict[val] == val_to_match:
 					print("[PL, dict{}] ", val)
 					output.append(photos[val])
-		elif params == AND:
-			# SELECT * FROM persons WHERE name IN ("John", "Doe");
-			print("[PL, query_tag] AND search")
-			var query = "'"
-			# create query
-			for t in tag:
-				query = query + '%' + t
-			query = query + "%'"
-			query = "SELECT * FROM photos WHERE tags LIKE " + query
-			print("[PL, query_tag()] querying database: ", query)
-			db.query(query)
-			var result = db.query_result
-			print("[PL, query_tag()] result: ", result)
-			for photo_in_db in result:
-				var index = photo_in_db["id"] - 1
-				output.append(photos[index])
-			
+		
 
 			
 	else:
+		print("SOMETHING WENT WRONG")
 		return []
 	
 	return output
