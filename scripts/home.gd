@@ -195,9 +195,25 @@ func test3():
 	PhotoLoader.query_tag("skibidi", PhotoLoader.OR)
 	
 	print("-------OR 1---------")
-	PhotoLoader.query_tag(["buh", "pens"], PhotoLoader.OR)
+	z(PhotoLoader.query_tag(["buh", "pens"], PhotoLoader.OR))
+	await get_tree().create_timer(2).timeout 
 	print("-------AND 1---------")
-	PhotoLoader.query_tag(["pens","buh"], PhotoLoader.AND)
+	z(PhotoLoader.query_tag(["pens","buh"], PhotoLoader.AND))
+	await get_tree().create_timer(2).timeout 
+	print("-------AND 2---------")
+	z(PhotoLoader.query_tag(["pens","skibidi"], PhotoLoader.AND))
+	await get_tree().create_timer(2).timeout 
+	print("-------AND 3---------")
+	PhotoLoader.photos[5].add_tag("john")
+	PhotoLoader.photos[5].add_tag("cena")
+	z(PhotoLoader.query_tag(["buh","john","cena"], PhotoLoader.AND))
+
+func z(lst):
+	clear_rows()
+	PhotoLoader.photo_queue.clear()
+	for p in lst:
+		PhotoLoader.photo_queue.append(p)
+	load_row_queue()
 
 	
 func test4():
