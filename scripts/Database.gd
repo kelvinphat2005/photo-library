@@ -126,6 +126,13 @@ func make_photo(photo_id) -> PhotoTile:
 	new_photo_tile.date = p["date"]
 	return new_photo_tile
 
+func create_album(album_name : String) -> void:
+	var query = "INSERT INTO albums ('name') VALUES ('{album_name}')".format({
+		"album_name": album_name
+	})
+	print("[DB, create_album()] query: ", query)
+	db.query()
+
 func add_to_album(album_id : int, photo_id : int) -> void:
 	var query = "INSERT INTO album_photos ('album_id', 'photo_id') VALUES ('{album_id}', '{photo_id}'".format({
 		"album_id": album_id, "photo_id": photo_id

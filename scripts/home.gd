@@ -28,6 +28,7 @@ var search_container : HorizontalItemContainer
 var search : TextEdit
 var search_submit : Button
 var search_dropdown : OptionButton
+var search_type_dropdown : OptionButton
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -276,7 +277,6 @@ func init_search() -> void:
 		
 		search_dropdown.add_item("AND", 0)
 		search_dropdown.add_item("OR", 1)
-		search_dropdown.add_item("ID", 2)
 		
 		search_dropdown.select(0)
 	if not search_container:
