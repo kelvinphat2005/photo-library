@@ -12,7 +12,7 @@ var num_of_photos_on_launch : int
 
 var curr_id : int = -1
 
-enum {ID, TAGS, NONE, AND, OR}
+enum {ID, TAGS, ALBUMS, NONE, AND, OR}
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -81,42 +81,52 @@ func add_photo(result):
 	
 func photo_query(query_input, params, query_type := TAGS) -> Array:
 	if query_type == ID:
-		photo_queue = query_id(query_input, params, query_type)
+		photo_queue = query_id(query_input, params)
 		return photo_queue
-	elif query_type == TAGS:
-		photo_queue = query_tag(query_input, params, query_type)
+	elif query_type == TAGS or query_type == ALBUMS:
+		photo_queue = query(query_input, params, query_type)
 		return photo_queue
 	return []
 		
-func query_id(id, params, query_type) -> Array:
+func query_id(id, params) -> Array:
 	var db = Database.db
 	var output = []
 	
 	
 	return output
 	
-func query_tag(tag, params, query_type) -> Array:
+func query(search_list, params, query_type) -> Array:
 	var db = Database.db
 	var output = []
-	var type : String
 	
-	print("[PL, query_tag()] tag(s): ", tag)
+	var table : String
+	var descriptor : String
 	
-	if tag is String:
-		tag = [tag]
-		print("[PL, query_tag()] string to list: ", tag)
+	print("[PL, query_tag()] search(es): ", search_list)
+	
+	if search_list is String:
+		search_list = [search_list]
+		print("[PL, query_tag()] string to list: ", search_list)
 		
-	
+	if query_type == TAGS:
+		table = "tags"
+		descriptor = "tag"
+	elif query_type == ALBUMS:
+		table = "photo_album"
+		descriptor = "album_id"
+	else:
+		print("[PL, query_tag] QUERY_TYPE: SOMETHING WENT WRONG")
+		return [-1]
 		
-	if tag is Array:
+	if search_list is Array:
 		print("[PL, query_tag] YYYYY")
 		if params == PhotoLoader.OR:
 			print("[PL, query_tag] OR search")
 			var dict = {}
 			
-			for t in tag:
-				var query = "SELECT photo_id FROM tags WHERE tag == '{tag}'".format({
-					"tag": t
+			for search in search_list:
+				var query = "SELECT photo_id FROM {table} WHERE {descriptor} == '{search}'".format({
+					"table": table, "descriptor": descriptor, "search": search
 				})
 				print("[PL, query_tag()] querying database: ", query)
 				db.query(query)
@@ -135,11 +145,11 @@ func query_tag(tag, params, query_type) -> Array:
 		elif params == PhotoLoader.AND:
 			print("[PL, query_tag] AND search")
 			var dict = {}
-			var val_to_match = tag.size()
+			var val_to_match = search_list.size()
 			
-			for t in tag:
-				var query = "SELECT photo_id FROM tags WHERE tag == '{tag}'".format({
-					"tag": t
+			for search in search_list:
+				var query = "SELECT photo_id FROM {table} WHERE {descriptor} == '{search}'".format({
+					"table": table, "descriptor": descriptor, "search": search
 				})
 				print("[PL, query_tag()] querying database: ", query)
 				db.query(query)
@@ -155,8 +165,6 @@ func query_tag(tag, params, query_type) -> Array:
 				if dict[val] == val_to_match:
 					print("[PL, dict{}] ", val)
 					output.append(photos[val])
-		
-
 			
 	else:
 		print("[PL, query_tag()] SOMETHING WENT WRONG")
