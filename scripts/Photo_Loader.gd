@@ -81,42 +81,41 @@ func add_photo(result):
 	
 func photo_query(query_input, params, query_type := TAGS) -> Array:
 	if query_type == ID:
-		photo_queue = query_id(query_input, params)
+		photo_queue = query_id(query_input, params, query_type)
 		return photo_queue
 	elif query_type == TAGS:
-		photo_queue = query_tag(query_input, params)
+		photo_queue = query_tag(query_input, params, query_type)
 		return photo_queue
 	return []
 		
-func query_id(id, params) -> Array:
+func query_id(id, params, query_type) -> Array:
 	var db = Database.db
 	var output = []
 	
 	
 	return output
 	
-func query_tag(tag, params) -> Array:
+func query_tag(tag, params, query_type) -> Array:
 	var db = Database.db
 	var output = []
+	var type : String
 	
-	print("[PL, query_tag()] ", tag)
-	
-	if tag is Array:
-		print("[PL, query_tag] XXXX")
-		if tag.size() == 1:
-			tag = tag[0]
+	print("[PL, query_tag()] tag(s): ", tag)
 	
 	if tag is String:
 		tag = [tag]
+		print("[PL, query_tag()] string to list: ", tag)
 		
-	if tag is PackedStringArray:
+	
+		
+	if tag is Array:
 		print("[PL, query_tag] YYYYY")
 		if params == PhotoLoader.OR:
 			print("[PL, query_tag] OR search")
 			var dict = {}
 			
 			for t in tag:
-				var query = "SELECT id FROM tags WHERE tag == '{tag}'".format({
+				var query = "SELECT photo_id FROM tags WHERE tag == '{tag}'".format({
 					"tag": t
 				})
 				print("[PL, query_tag()] querying database: ", query)
@@ -126,7 +125,7 @@ func query_tag(tag, params) -> Array:
 		
 				# PREVENT DUPLICATES
 				for photo_in_db in result:
-					var index = photo_in_db["id"] - 1
+					var index = photo_in_db["photo_id"] - 1
 					dict[index] = true
 			# ADD PHOTOS TO OUTPUT
 			for val in dict:
@@ -139,7 +138,7 @@ func query_tag(tag, params) -> Array:
 			var val_to_match = tag.size()
 			
 			for t in tag:
-				var query = "SELECT id FROM tags WHERE tag == '{tag}'".format({
+				var query = "SELECT photo_id FROM tags WHERE tag == '{tag}'".format({
 					"tag": t
 				})
 				print("[PL, query_tag()] querying database: ", query)
@@ -147,7 +146,7 @@ func query_tag(tag, params) -> Array:
 				var result = db.query_result
 				print("[PL, query_tag()] result: ", result)
 				for photo_in_db in result:
-					var index = photo_in_db["id"] - 1
+					var index = photo_in_db["photo_id"] - 1
 					if dict.has(index):
 						dict[index] += 1
 					else:

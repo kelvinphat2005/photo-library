@@ -29,9 +29,9 @@ func create_database() -> void:
 	# Dictionary that contains tag information for quicker tag look up
 	# EXAMPLE: A photo id is paired with a tag. It can have multiple instances of the same id
 	var tags_dict_query = "CREATE TABLE 'tags' (
-		'id' INTEGER NOT NULL,
+		'photo_id' INTEGER NOT NULL,
 		'tag' TEXT NOT NULL,
-		UNIQUE(id,tag)
+		UNIQUE(photo_id,tag)
 	);"
 	#var tags_dict := Dictionary()
 	#tags_dict["id"] = {"data_type": "int"}
@@ -39,14 +39,19 @@ func create_database() -> void:
 	
 	# Dictionary that contains album information
 	var albums_dict := Dictionary()
+	albums_dict["id"] = {"data_type": "int", "unique": true, "primary_key": true, "not_null": true}
 	albums_dict["name"] = {"data_type": "text", "not_null": true}
-	albums_dict["album_id"] = {"data_type": "int", "unique": true, "not_null": true, "primary_key": true}
-	
-	album_template["photo_id"] = {"data_type": "int", "unique": true, "not_null": true}
+
+	var album_photos_query = "CREATE TABLE 'album_photos' (
+		'album_id' INTEGER NOT NULL,
+		'photo_id' INTEGER NOT NULL,
+		UNIQUE(album_id, photo_id)
+	);"
 	
 	db.create_table("photos", photos_dict)
 	db.query(tags_dict_query)
 	db.create_table("albums", albums_dict)
+	db.query(album_photos_query)
 	db.close_db()
 
 # add a photo to the database
@@ -73,7 +78,7 @@ func add_tags(photo_id : int, tags : PackedStringArray) -> void:
 
 	for tag in tags:
 		
-		var str_query = "INSERT INTO tags ('id','tag') VALUES ('{id}','{tag}')".format({
+		var str_query = "INSERT INTO tags ('photo_id','tag') VALUES ('{id}','{tag}')".format({
 			"id": photo_id, "tag": tag
 			})
 		print(str_query)
@@ -120,3 +125,10 @@ func make_photo(photo_id) -> PhotoTile:
 	new_photo_tile.tags = p["tags"]
 	new_photo_tile.date = p["date"]
 	return new_photo_tile
+
+func add_to_album(album_id : int, photo_id : int) -> void:
+	var query = "INSERT INTO album_photos ('album_id', 'photo_id') VALUES ('{album_id}', '{photo_id}'".format({
+		"album_id": album_id, "photo_id": photo_id
+	});
+	print("[DB, add_to_album()] query: ", query)
+	db.query()

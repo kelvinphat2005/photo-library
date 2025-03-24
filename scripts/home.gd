@@ -190,29 +190,26 @@ func test3():
 	PhotoLoader.photos[5].add_tag("buh")
 	PhotoLoader.photos[6].add_tag("skibidi")
 	
-	PhotoLoader.query_tag("buh", PhotoLoader.OR)
-	PhotoLoader.query_tag("pens", PhotoLoader.OR)
-	PhotoLoader.query_tag("skibidi", PhotoLoader.OR)
+	PhotoLoader.photo_query("buh", PhotoLoader.OR)
+	PhotoLoader.photo_query("pens", PhotoLoader.OR)
+	PhotoLoader.photo_query("skibidi", PhotoLoader.OR)
 	
 	print("-------OR 1---------")
-	z(PhotoLoader.query_tag(["buh", "pens"], PhotoLoader.OR))
+	z(PhotoLoader.photo_query(["buh", "pens"], PhotoLoader.OR))
 	await get_tree().create_timer(2).timeout 
 	print("-------AND 1---------")
-	z(PhotoLoader.query_tag(["pens","buh"], PhotoLoader.AND))
+	z(PhotoLoader.photo_query(["pens","buh"], PhotoLoader.AND))
 	await get_tree().create_timer(2).timeout 
 	print("-------AND 2---------")
-	z(PhotoLoader.query_tag(["pens","skibidi"], PhotoLoader.AND))
+	z(PhotoLoader.photo_query(["pens","skibidi","nm"], PhotoLoader.AND))
 	await get_tree().create_timer(2).timeout 
 	print("-------AND 3---------")
 	PhotoLoader.photos[5].add_tag("john")
 	PhotoLoader.photos[5].add_tag("cena")
-	z(PhotoLoader.query_tag(["buh","john","cena"], PhotoLoader.AND))
+	z(PhotoLoader.photo_query(["buh","john","cena"], PhotoLoader.AND))
 
 func z(lst):
 	clear_rows()
-	PhotoLoader.photo_queue.clear()
-	for p in lst:
-		PhotoLoader.photo_queue.append(p)
 	load_row_queue()
 
 	
