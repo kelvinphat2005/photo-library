@@ -81,9 +81,11 @@ func add_photo(result):
 	
 func photo_query(query_input, params, query_type := TAGS) -> Array:
 	if query_type == ID:
-		return query_id(query_input, params)
+		photo_queue = query_id(query_input, params)
+		return photo_queue
 	elif query_type == TAGS:
-		return query_tag(query_input, params)
+		photo_queue = query_tag(query_input, params)
+		return photo_queue
 	return []
 		
 func query_id(id, params) -> Array:
@@ -97,6 +99,8 @@ func query_tag(tag, params) -> Array:
 	var db = Database.db
 	var output = []
 	
+	print("[PL, query_tag()] ", tag)
+	
 	if tag is Array:
 		print("[PL, query_tag] XXXX")
 		if tag.size() == 1:
@@ -105,9 +109,9 @@ func query_tag(tag, params) -> Array:
 	if tag is String:
 		tag = [tag]
 		
-	if tag is Array:
+	if tag is PackedStringArray:
 		print("[PL, query_tag] YYYYY")
-		if params == OR:
+		if params == PhotoLoader.OR:
 			print("[PL, query_tag] OR search")
 			var dict = {}
 			
@@ -129,7 +133,7 @@ func query_tag(tag, params) -> Array:
 				print("[PL, dict{}] ", val)
 				output.append(photos[val])
 					
-		elif params == AND:
+		elif params == PhotoLoader.AND:
 			print("[PL, query_tag] AND search")
 			var dict = {}
 			var val_to_match = tag.size()
@@ -156,7 +160,7 @@ func query_tag(tag, params) -> Array:
 
 			
 	else:
-		print("SOMETHING WENT WRONG")
+		print("[PL, query_tag()] SOMETHING WENT WRONG")
 		return []
 	
 	return output

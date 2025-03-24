@@ -217,7 +217,19 @@ func z(lst):
 
 	
 func test4():
-	init_search()
+	
+	PhotoLoader.photos[0].add_tag("buh")
+	PhotoLoader.photos[1].add_tag("pens")
+	PhotoLoader.photos[1].add_tag("buh")
+	PhotoLoader.photos[2].add_tag("buh")
+	PhotoLoader.photos[3].add_tag("pens")
+	PhotoLoader.photos[4].add_tag("pens")
+	PhotoLoader.photos[5].add_tag("buh")
+	PhotoLoader.photos[6].add_tag("skibidi")
+
+	clear_rows()
+	PhotoLoader.photo_query(["buh"], PhotoLoader.AND, PhotoLoader.TAGS)
+	load_row_queue()
 
 
 func test9():
@@ -294,14 +306,24 @@ func _search() -> void:
 	print("Search Bar Text: ", search.text)
 	
 	var searches 
-	searches = search.text.split(",")
+	searches = search.text.split(" ")
 	# last element will contain '\n' so remove.
 	searches[searches.size() - 1].left(searches[searches.size() - 1].length() - 1)
-	print(searches)
+	print("Search Bar List: ", searches)
+	print(searches is PackedStringArray)
+	print(search_dropdown.text)
 	
-	for search in searches:
-		PhotoLoader.photo_query(searches, PhotoLoader.TAGS)
-		pass
+	var type
+	if search_dropdown.text == "OR":
+		type = PhotoLoader.OR
+	elif search_dropdown.text == "AND":
+		type = PhotoLoader.AND
+	elif search_dropdown.text == "ID":
+		type = PhotoLoader.ID
+	
+	clear_rows()
+	PhotoLoader.photo_query(searches, type, PhotoLoader.TAGS)
+	load_row_queue()
 	
 	
 	# finish
