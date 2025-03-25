@@ -40,7 +40,13 @@ func _ready() -> void:
 	
 # Types.RATIO = Height does matter, input-length does not matter
 # Types.FIXED = Height does not matter, input-length does matter
-func add_item(input : Control, length : int = -1) -> void:
+func add_item(input, length : int = -1) -> void:
+	if input is Control or input is Photo:
+		pass
+	else:
+		print("[IC, add_item] INVALID TYPE XXXXXXXXXXXXXXXXXXXXXX")
+		return
+	
 	print("[IC, add_item()] ADDING: ", input)
 	if ratios.size() <= items.size():
 		if type == Types.RATIO:
@@ -48,17 +54,32 @@ func add_item(input : Control, length : int = -1) -> void:
 			return
 	add_child(input)
 	input.visible = self.visible
-	input.size.x = self.width
-	input.size.y = self.height
+	if input is Control:
+		input.size.x = self.width
+		input.size.y = self.height
+	elif input is Photo or input is PhotoTile:
+		var new_y = input.calc_new_y(length)
+		var new_x
+		# if image is too tall
+		# the bottom will be cut off, fix:
+		if new_y > height:
+			new_x = input.calc_new_x(height)
+			new_y = height
+			input.resize(new_x, new_y)
+		else:
+			input.resize(length, new_y)
+		# image offset
+		
+	else:
+		print("ERROR")
 	items.append(input)
 	
 	if type == Types.FIXED:
 		assert(length > 0, "INVALID HEIGHT")
 		sizes[input] = length
 	
-	update_container(input)
 	
-func update_container(input : Control) -> void:
+func update_container() -> void:
 	pass
 
 func resize() -> void:
@@ -71,22 +92,10 @@ func resize() -> void:
 		resize_fixed()
 		
 func resize_ratio() -> void:
-	#height = get_viewport().size.y
-	#width = get_viewport().size.x
-	# very dumb way
-	var temp = []
-	for item in items:
-		item.position = Vector2(0, 0)
-		temp.append(item)
-	items.clear()
-	for item in temp:
-		items.append(item)
-		item.size.x = self.width
-		item.size.y = self.height
-		update_container(item)
+	update_container()
 
 func resize_fixed() -> void:
-	pass
+	update_container()
 
 func init_background(texture) -> void:
 	print("[IC, init_background()] called with ", texture)

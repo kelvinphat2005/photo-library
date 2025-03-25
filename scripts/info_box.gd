@@ -12,19 +12,4 @@ func _ready() -> void:
 	
 func update_details(photo : PhotoTile):
 	print("[INFO_BOX, update_details] called")
-	path.clear()
-	path.append_text("[color=black]{path}[/color]".format({
-		"path":photo.path
-	}))
-	date.clear()
-	date.append_text("[color=black]{date}[/color]".format({
-		"date":photo.date
-	}))
-	#tags.clear()
-	#tags.append_text("[color=black]{tags}[/color]".format({
-	#	"tags":photo.tags
-	#}))
-	description.clear()
-	description.append_text("[color=black]{description}[/color]".format({
-		"description":photo.description
-	}))
+	pass

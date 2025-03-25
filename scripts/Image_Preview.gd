@@ -4,104 +4,89 @@ class_name ImagePreview
 
 
 var win_size 
-var photo : Photo # Photo that is being previewed
+var preview_photo : Photo # Photo that is being previewed
 
-var photo_preview_pos : Vector2
 
-@export var details : Node2D
+var preview_container : HorizontalItemContainer
+var details_container : VerticalItemContainer
+
+# Right hand details box
 @export var details_width : int = 500
 
-@onready var preview_photo : Photo = Photo.new(-1,-1,0,"")
-@export var camera : Camera2D
-@export var background : MeshInstance2D
-@export var item_details : MeshInstance2D
+var debug = true
 
 # TODO: ENABLE/DISABLE CAMERA MOVEMENT WHEN IMAGE IS BEING PREVIEWED
 
 func _ready() -> void:
+	if debug:
+		Database.create_database()
+		Database.db.open_db()
+		PhotoLoader.active = true
+	
 	self.visible = false
-	add_child(preview_photo)
 	
 	win_size = get_viewport().size
 	
 	SignalBus.connect("_photo_tile_clicked", show)
 	get_tree().get_root().size_changed.connect(resize)
 
+
 func _process(delta) -> void:
-	background.scale = win_size
 	if Input.is_action_just_released("debug_0"):
-		self.visible = false
-		Global.photo_tile_interact = true
+		show(PhotoLoader.photos[0])
+	if Input.is_action_just_released("debug_9"):
+		close()
 	
-func show(photo):
+func close() -> void:
+	self.visible = false
+	Global.photo_tile_interact = true
+	preview_photo = null
+	remove_child(preview_container)
+	preview_container.queue_free()
 	
-	print("[IMG PREV] ----------- show() ---------")
-	win_size = get_viewport().size
+func show(photo : Photo) -> void:
+	if get_child_count() > 0:
+		print("[Image_Preview, show()] PREVIEW ALREADY LOADED")
+		return
 	
+	print("[Image_Preview, show()] Called")
+
 	
+	# clone photo
+	preview_photo = Photo.new(photo.original_x, photo.original_y, photo.id, photo.path)
+
 	self.visible = true
 	Global.photo_tile_interact = false
-	background.scale = win_size
-	
-	set_photo(photo)
-	
-	var buh = win_size.x - 500
-	details.position.x = buh
-	
-# places the preview in the center of the screen
-# no matter windowsize or scroll position
-func center_preview() -> void:
 	win_size = get_viewport().size
-	print("[IMG PREV] center_preview()")
-	self.position.y = camera.position.y + win_size.y / 2	
-	self.position.x = int(win_size.x) / 2
-	preview_photo.position.x = camera.position.x
+	preview_container = HorizontalItemContainer.new(win_size.x, win_size.y, ItemContainer.Types.FIXED)
+	
+	var preview_photo2 = Photo.new(photo.original_x, photo.original_y, photo.id, photo.path)
+	
+	if false:
+		# win_size.x <= details_width * 2
+		# If window size is too small:
+		# dont show preview image
+		# AND fill window with details
+		init_details_container(details_width * 2)
+	else:
+		print("[Image_Preview, show()] XXXXX")
+		var sizes = [win_size.x - details_width, details_width]
 
-# Set the current preview photo to said photo
-func set_photo(photo : Photo) -> void:
-	print("[IMG PREV] set_photo()")
-	# if resize is called multiple times at once
-	# this prevents it from decreasing in size continuinly
-	preview_photo.scale = Vector2(1,1)
-	# just copy texture instead of repositioning photo so no need to store initial
-	# image variables (scale, position)
-	preview_photo.texture = photo.texture
-	preview_photo.x = photo.original_x
-	preview_photo.y = photo.original_y
-	preview_photo.id = photo.id
-	preview_photo.aspect_ratio = photo.aspect_ratio
-	preview_photo.aspect_ratio_r = photo.aspect_ratio_r
-	# scale photo to fill screen
-	resize(000, details_width)
-
-# resize photo to fit the screen
-# photo by default is centered
-# lpadding adds padding to left, rpadding adds padding to the right
-# ---> this is useful for photos that are wide
-func resize(lpadding = 0, rpadding = 0) -> void:
-	center_preview()
-	print("[IMG PREV] resize()")
-	print("[IMG PREV] Window size: ", win_size.x, "x", win_size.y)
+		print(sizes)
+		preview_container.add_item(preview_photo, sizes[0])
+		preview_container.add_item(preview_photo2, sizes[1])
+		#init_details_container(sizes[1])
+		#preview_container.add_item(details_container, sizes[1])
+		preview_container.resize()
+		#details_container.resize()
+	
+	preview_container.z_index_children(50)
+	add_child(preview_container)
+	
+func init_details_container(width : int) -> void:
 	win_size = get_viewport().size
+	details_container = VerticalItemContainer.new(width, win_size.y, ItemContainer.Types.FIXED)
 	
-	var total_x_padding = lpadding + rpadding
 	
-	if preview_photo.id > 0:
-		
-		var new_x = preview_photo.calc_new_x(win_size.y) 
-
-		# check if the image is too large
-		if new_x > win_size.x - total_x_padding:
-			# TOO LONG
-			var new_y = preview_photo.calc_new_y(win_size.x - total_x_padding) # photo fit in 
-			preview_photo.resize(win_size.x - total_x_padding, new_y)
-		else:
-			preview_photo.resize(new_x, win_size.y)
-			
-		# since image is centered, there is already some "padding"
-		# calculate that number
-		var curr_lpadding = total_x_padding / 2
-		var curr_rpadding = total_x_padding / 2
-		# determine how much more padding to add to hit target
-		var difference = lpadding - curr_lpadding
-		preview_photo.position.x += difference
+func resize() -> void:
+	print("[Image_Preview, resize()] Called")
