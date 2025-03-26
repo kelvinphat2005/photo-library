@@ -33,9 +33,6 @@ func create_database() -> void:
 		'tag' TEXT NOT NULL,
 		UNIQUE(photo_id,tag)
 	);"
-	#var tags_dict := Dictionary()
-	#tags_dict["id"] = {"data_type": "int"}
-	#tags_dict["tag"] = {"data_type": "text"}
 	
 	# Dictionary that contains album information
 	var albums_dict := Dictionary()
@@ -65,7 +62,7 @@ func add_photo(path : String, name = null) -> void:
 	var str_query = "INSERT INTO photos ('path', 'date', 'name', 'description') VALUES ('{path}', {date}, '{name}', '{description}')".format({
 		"path": path, "date": date, "name":name, "description": ""
 		})
-	print(str_query)
+	print("[DB, add_photo] query: ", str_query)
 	db.query(str_query)
 	
 	# TODO: PREVENT DUPLICATES
@@ -77,11 +74,10 @@ func add_photo(path : String, name = null) -> void:
 func add_tags(photo_id : int, tags : PackedStringArray) -> void:
 
 	for tag in tags:
-		
 		var str_query = "INSERT INTO tags ('photo_id','tag') VALUES ('{id}','{tag}')".format({
 			"id": photo_id, "tag": tag
 			})
-		print(str_query)
+		print("[DB, add_tags] query: ", str_query)
 		db.query(str_query)
 	
 
@@ -89,12 +85,12 @@ func get_photo_path(photo_id) -> String:
 	var str_query = "SELECT path FROM photos WHERE id = {photo_id}".format({
 		"photo_id": photo_id
 		})
-	print(str_query)
+	print("[DB, get_photo_path()] QUERY: ", str_query)
 	db.query(str_query)
 	var result = db.query_result
-	print("RESULT: ", result)
+	print("[DB, get_photo_path()] RESULT: ", result)
 	result = result[0]["path"]
-	print(result)
+	print("[DB, get_photo_path()] NEW RESULT: ", result)
 
 	return result
 	
@@ -106,9 +102,9 @@ func get_photo_info(photo_id):
 	print(str_query)
 	db.query(str_query)
 	var result = db.query_result
-	print("RESULT: ", result)
+	print("[DB, get_photo_info()] RESULT: ", result)
 	result = result[0]
-	print(result)
+	print("[DB, get_photo_info()] NEW RESULT: ",result)
 
 	return result
 

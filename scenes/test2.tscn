@@ -1,26 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://c8cn8wlb0lio6"]
+[gd_scene load_steps=3 format=3 uid="uid://c8cn8wlb0lio6"]
 
 [ext_resource type="Script" path="res://scripts/home.gd" id="2_5hpul"]
 [ext_resource type="Script" path="res://scripts/Image_Preview.gd" id="2_nd6x1"]
-[ext_resource type="Script" path="res://scripts/info_box.gd" id="3_oikha"]
-
-[sub_resource type="QuadMesh" id="QuadMesh_rgv2o"]
-
-[sub_resource type="Gradient" id="Gradient_o4l1t"]
-colors = PackedColorArray(0, 0, 0, 1, 0.0481928, 0.0481928, 0.0481928, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_pnnmk"]
-gradient = SubResource("Gradient_o4l1t")
-width = 1
-
-[sub_resource type="QuadMesh" id="QuadMesh_t1m7v"]
-
-[sub_resource type="Gradient" id="Gradient_i4svr"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_ne5wd"]
-gradient = SubResource("Gradient_i4svr")
 
 [node name="Test2" type="Node2D"]
 
@@ -33,26 +14,12 @@ visible = false
 z_index = 5
 script = ExtResource("2_nd6x1")
 
-[node name="Control" type="Control" parent="ImagePreview"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Background" type="MeshInstance2D" parent="ImagePreview/Control"]
-mesh = SubResource("QuadMesh_rgv2o")
-texture = SubResource("GradientTexture1D_pnnmk")
-
-[node name="ItemDetails" type="MeshInstance2D" parent="ImagePreview/Control"]
-mesh = SubResource("QuadMesh_t1m7v")
-texture = SubResource("GradientTexture1D_ne5wd")
-
 [node name="Home" type="Node2D" parent="." node_paths=PackedStringArray("camera", "file_dialog", "row_node", "prev_box")]
 script = ExtResource("2_5hpul")
 camera = NodePath("../Camera2D")
 file_dialog = NodePath("FileDialog")
 row_node = NodePath("Rows")
-prev_box = NodePath("../Control")
+prev_box = NodePath("")
 
 [node name="FileDialog" type="FileDialog" parent="Home"]
 title = "Open a File"
@@ -63,93 +30,6 @@ file_mode = 0
 access = 2
 
 [node name="Rows" type="Node2D" parent="Home"]
-
-[node name="Control" type="Control" parent="." node_paths=PackedStringArray("topheader", "description", "tags", "details", "date", "path")]
-visible = false
-layout_mode = 3
-anchors_preset = 0
-script = ExtResource("3_oikha")
-topheader = NodePath("VBoxContainer/TopHeader/VBoxContainer2/Heading")
-description = NodePath("VBoxContainer/Description")
-tags = NodePath("VBoxContainer/Tags")
-details = NodePath("VBoxContainer/DetailsHeader")
-date = NodePath("VBoxContainer/Date Placeholder")
-path = NodePath("VBoxContainer/Path Placeholder")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 0
-offset_left = 1.0
-offset_right = 361.0
-offset_bottom = 499.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-
-[node name="TopHeader" type="HBoxContainer" parent="Control/VBoxContainer"]
-custom_minimum_size = Vector2(0, 90)
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/TopHeader"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="Close" type="Button" parent="Control/VBoxContainer/TopHeader/VBoxContainer"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "X"
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="Control/VBoxContainer/TopHeader"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-
-[node name="Heading" type="RichTextLabel" parent="Control/VBoxContainer/TopHeader/VBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 7.15
-bbcode_enabled = true
-text = "[color=black][b][font_size=32]Heading 1[/font_size][/b][/color]"
-fit_content = true
-
-[node name="Description" type="RichTextLabel" parent="Control/VBoxContainer"]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-bbcode_enabled = true
-text = "[color=black]PLACEHOLDER DSECRIPTION
-[/color]"
-
-[node name="Tags" type="RichTextLabel" parent="Control/VBoxContainer"]
-custom_minimum_size = Vector2(0, 38)
-layout_mode = 2
-bbcode_enabled = true
-text = "[color=black]TAGS PLACE HOLDER
-[/color]"
-
-[node name="DetailsHeader" type="RichTextLabel" parent="Control/VBoxContainer"]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-bbcode_enabled = true
-text = "[color=black][b]Details
-[/b][/color]"
-
-[node name="Date Placeholder" type="RichTextLabel" parent="Control/VBoxContainer"]
-custom_minimum_size = Vector2(0, 48)
-layout_mode = 2
-bbcode_enabled = true
-text = "[color=black]DATE PLACE HOLDER
-
-[/color]"
-
-[node name="Path Placeholder" type="RichTextLabel" parent="Control/VBoxContainer"]
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-bbcode_enabled = true
-text = "[color=black]PATH PLACE HOLDER
-[/color]"
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="Control"]
 
 [connection signal="file_selected" from="Home/FileDialog" to="Home" method="_on_file_dialog_file_selected"]
 [connection signal="files_selected" from="Home/FileDialog" to="Home" method="_on_file_dialog_files_selected"]

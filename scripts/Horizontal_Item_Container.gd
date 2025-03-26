@@ -41,10 +41,15 @@ func update_container() -> void:
 					print("[HIC, update_container] Photo TOO TALL!! ")
 					var resized_width = item.calc_new_x(height)
 					item.resize(resized_width, height)
-					# center image
+					# center image horizontally
 					var remaining_width = new_width - resized_width
 					item.position.x += remaining_width / 2
 				else:
+					# center image vertically
+					var remaining_height = height - new_y
+					var y_offset = remaining_height / 2
+					item.position.y += y_offset
+					
 					item.resize(new_width, new_y)
 			
 			offset += new_width

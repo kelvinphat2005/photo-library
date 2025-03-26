@@ -4,8 +4,8 @@ class_name Photo
 # resolution
 var original_x : int
 var original_y : int
-var x
-var y
+var x # current x resolution
+var y # current y resolution
 # used to resize/scale
 var aspect_ratio : float
 var aspect_ratio_r : float
@@ -16,8 +16,6 @@ var path : String
 var date : String
 var description : String
 var photo_name : String
-#var tags 
-
 
 func  _init(ix, iy, iid, ipath):
 	original_x = ix
@@ -51,8 +49,8 @@ func resize(new_x, new_y) -> void:
 	# var y_scale = float(new_y)/original_y
 	var x_scale = float(new_x)/x
 	var y_scale = float(new_y)/y
-	print("[PHOTO, RESIZE] ", x, "x", y)
-	print("[PHOTO, RESIZE] ", new_x, "x", new_y)
+	print("[PHOTO, RESIZE] Original: ", x, "x", y)
+	print("[PHOTO, RESIZE] New Resolution: ", new_x, "x", new_y)
 	print("[PHOTO, RESIZE] x_scale: ", x_scale, " | y_scale: ", y_scale)
 	
 	x *= float(x_scale)
@@ -61,7 +59,7 @@ func resize(new_x, new_y) -> void:
 	scale.x *= x_scale
 	scale.y *= y_scale
 	
-	print("x: ", x, " | y: ", y)
+	print("[PHOTO, RESIZE] Final Resolution: ", x, "x", y)
 
 # uses path to load img
 func load_img() -> bool:
@@ -72,7 +70,6 @@ func load_img() -> bool:
 	return false
 
 func add_tag(tag : String) -> void:
-	# tags += tag + ","
 	Database.add_tags(id, [tag])
 	return
 

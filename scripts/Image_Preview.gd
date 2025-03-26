@@ -5,6 +5,7 @@ class_name ImagePreview
 
 var win_size 
 var preview_photo : Photo # Photo that is being previewed
+var photo_cache : Photo
 
 
 var preview_container : HorizontalItemContainer
@@ -45,13 +46,14 @@ func close() -> void:
 	preview_container.queue_free()
 	
 func show(photo : Photo) -> void:
+	photo_cache = photo # cache so if resize, use this
 	if get_child_count() > 0:
 		print("[Image_Preview, show()] PREVIEW ALREADY LOADED")
 		return
 	
 	print("[Image_Preview, show()] Called")
 
-	
+
 	# clone photo
 	preview_photo = Photo.new(photo.original_x, photo.original_y, photo.id, photo.path)
 
@@ -62,12 +64,15 @@ func show(photo : Photo) -> void:
 	
 	var preview_photo2 = Photo.new(photo.original_x, photo.original_y, photo.id, photo.path)
 	
-	if false:
+	if win_size.x <= details_width * 2:
 		# win_size.x <= details_width * 2
 		# If window size is too small:
 		# dont show preview image
 		# AND fill window with details
-		init_details_container(details_width * 2)
+		
+		#init_details_container(details_width * 2)
+		preview_container.add_item(preview_photo2, win_size.x)
+		preview_container.resize()
 	else:
 		print("[Image_Preview, show()] XXXXX")
 		var sizes = [win_size.x - details_width, details_width]
@@ -90,3 +95,6 @@ func init_details_container(width : int) -> void:
 	
 func resize() -> void:
 	print("[Image_Preview, resize()] Called")
+	if get_child_count() > 0:
+		close()
+		show(photo_cache)

@@ -231,11 +231,7 @@ func test4():
 
 
 func test9():
-	clear_rows()
-	
-	for i in range(0,9):
-		PhotoLoader.photo_queue.append(PhotoLoader.photos[i])
-	load_row_queue()
+	pass
 
 func clear_rows() -> void:
 	for r in rows:
@@ -293,11 +289,13 @@ func init_search() -> void:
 		search_container.position.y -= search_bar_height
 	else:
 		search_container.width = win_size.x
-		search_container.resize()
+	search_container.resize()
 	
 # when search button pressed
 func _search() -> void:
 	if search.text == "":
+		win_size = get_viewport().size
+		reload_all_rows()
 		return
 	
 	print("Search Bar Text: ", search.text)
@@ -321,8 +319,7 @@ func _search() -> void:
 	clear_rows()
 	PhotoLoader.photo_query(searches, type, PhotoLoader.TAGS)
 	load_row_queue()
-	
-	
+
 	# finish
 	search.text = ""
 	
