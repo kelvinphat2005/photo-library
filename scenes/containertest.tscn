@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://w5aamkxnccam"]
 
-[ext_resource type="Script" path="res://scenes/test scripts/containertest.gd" id="1_nkn4r"]
+[ext_resource type="Script" uid="uid://bi6vevyun4ky5" path="res://scenes/test scripts/containertest.gd" id="1_nkn4r"]
 
 [node name="Containertest" type="Node2D"]
 position = Vector2(400, 186)

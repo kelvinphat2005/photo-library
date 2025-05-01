@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cavggw6mym0br"]
+
+[ext_resource type="Script" path="res://scripts/detector/detect.py" id="1_3phc0"]
+
+[node name="Detector" type="Node2D"]
+script = ExtResource("1_3phc0")

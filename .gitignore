@@ -3,3 +3,8 @@
 test photos
 database/main.db
 /android/
+photos/*.png
+photos/*.jpg
+*.uid
+runs/
+scripts/detector/model/*
