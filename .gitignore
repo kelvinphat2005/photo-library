@@ -1,4 +1,19 @@
 # Godot 4+ specific ignores
+<<<<<<< HEAD
+Godot/.godot/
+Godot/test photos
+Godot/database/main.db
+Godot/android/
+Godot/photos/*
+*.uid
+Detectors/runs/
+Detectors/models/
+*.pkl
+*.bin
+*.tflite
+*.pt
+Godot/addons
+=======
 .godot/
 test photos
 database/main.db
@@ -8,3 +23,4 @@ photos/*.jpg
 *.uid
 runs/
 scripts/detector/model/*
+>>>>>>> 07353db4a805fb0a1ee725fbef109fa93594687b
