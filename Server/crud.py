@@ -1,0 +1,45 @@
+import sqlite3, pathlib, shutil
+from datetime import date
+
+# manages read and writes
+
+from models import Photo, Tag, Album
+from database import PHOTO_FOLDER_PATH
+
+def get_photo_from_id(db : sqlite3.Connection, id : int) -> Photo:
+    p = None
+
+    db.row_factory = sqlite3.Row 
+    cur = db.execute(
+        "SELECT * FROM photos WHERE id = ?", (id,)
+    )
+    rows = cur.fetchall()
+    print(rows[0])
+    p = Photo(rows[0]["id"],rows[0]["name"],rows[0]["date"],rows[0]["description"],rows[0]["path"])
+
+    return p
+
+def add_photo(db : sqlite3.Connection, path : str, name : str = "", description : str = "") -> None:
+    # duplicate photo
+    shutil.copy(path, PHOTO_FOLDER_PATH)
+
+    # get new relative path
+    pathlb = pathlib.Path(path)
+    file_name = pathlb.name
+    rel_path = str(pathlib.Path(str(PHOTO_FOLDER_PATH) + "/" + str(file_name)).resolve())
+
+    # get date
+    dte = date.today()
+    dte = dte.strftime("%Y%m%d")
+
+    # add
+    try:
+        db.execute(
+            "INSERT INTO photos (path, date, name, description) VALUES (?, ?, ?, ?)",
+            (rel_path, dte, name, description),
+        )
+        db.commit()
+    except:
+        print("[CRUD.PY] Duplicate Photo Error")
+    finally:
+        return
