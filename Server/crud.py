@@ -1,5 +1,7 @@
 import sqlite3, pathlib, shutil
 from datetime import date
+import cv2
+from uuid import uuid4
 
 # manages read and writes
 
@@ -28,6 +30,29 @@ def add_photo(db : sqlite3.Connection, path : str, name : str = "", description 
     file_name = pathlb.name
     rel_path = str(pathlib.Path(str(PHOTO_FOLDER_PATH) + "/" + str(file_name)).resolve())
 
+    # get date
+    dte = date.today()
+    dte = dte.strftime("%Y%m%d")
+
+    # add
+    try:
+        db.execute(
+            "INSERT INTO photos (path, date, name, description) VALUES (?, ?, ?, ?)",
+            (rel_path, dte, name, description),
+        )
+        db.commit()
+    except:
+        print("[CRUD.PY] Duplicate Photo Error")
+    finally:
+        return
+    
+def add_photo_img(db : sqlite3.Connection, img, extension, name : str = "", description : str = "") -> None:
+    if name == "":
+        name = uuid4().hex
+    rel_path = str(PHOTO_FOLDER_PATH) + "/" + str(name) + "." + extension
+    print("rel_path:", rel_path)
+    cv2.imwrite(rel_path, img)
+    
     # get date
     dte = date.today()
     dte = dte.strftime("%Y%m%d")
