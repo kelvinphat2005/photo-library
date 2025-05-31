@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 import os
 from database import init_db, get_conn, DATABASE_PATH
 import crud, models
@@ -11,12 +12,23 @@ from PIL import Image, UnidentifiedImageError
 import cv2
 import pathlib
 
-
 TEMP_FOLDER = pathlib.Path(__file__).with_name("temp")
 
-ALLOWED_TYPES = {"image/png", "image/jpeg"}
-
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 init_db()
 
 def db_dep() -> sqlite3.Connection:
@@ -51,7 +63,7 @@ async def add_photo(photo : UploadFile = File(...)):
     return {"test": "testing"}
 
 @app.get("/photos/{photo_id}")
-def get_photo(photo_id : int):
+async def get_photo(photo_id : int):
     with sqlite3.connect(DATABASE_PATH) as db:
         photo = crud.get_photo_from_id(db, photo_id)
         file_path = photo.path
@@ -59,5 +71,5 @@ def get_photo(photo_id : int):
         return FileResponse(file_path, media_type="image/jpeg")
     
 @app.get("/test/{id}")
-def test(id : int):
+async def test(id : int):
     return {"penid": id}
