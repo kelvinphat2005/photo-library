@@ -17,8 +17,7 @@ const navButtons = [
 
 export default function NavBar() {
     const [open, setOpen] = useState(false);
-
-
+    
     return (
         <nav className="bg-slate-600 p-4">
             <div className="flex items-center">
