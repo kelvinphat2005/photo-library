@@ -58,7 +58,7 @@ async def add_photo(photo : UploadFile = File(...)):
         raise ValueError("Not a valid image")
 
     with sqlite3.connect(DATABASE_PATH) as db:
-        crud.add_photo_img(db, img, extension)
+        crud.add_photo_img(db, img)
 
     return {"test": "testing"}
 

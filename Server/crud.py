@@ -46,12 +46,12 @@ def add_photo(db : sqlite3.Connection, path : str, name : str = "", description 
     finally:
         return
     
-def add_photo_img(db : sqlite3.Connection, img, extension, name : str = "", description : str = "") -> None:
+def add_photo_img(db : sqlite3.Connection, img, name : str = "", description : str = "") -> None:
     if name == "":
         name = uuid4().hex
-    rel_path = str(PHOTO_FOLDER_PATH) + "/" + str(name) + "." + extension
+    rel_path = str(PHOTO_FOLDER_PATH) + "/" + str(name) + ".jpg"
     print("rel_path:", rel_path)
-    cv2.imwrite(rel_path, img)
+    cv2.imwrite(rel_path, img, [cv2.IMWRITE_JPEG_QUALITY, 90])
     
     # get date
     dte = date.today()
