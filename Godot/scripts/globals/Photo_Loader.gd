@@ -12,8 +12,6 @@ var num_of_photos_on_launch : int
 
 var curr_id : int = -1
 
-enum {ID, TAGS, ALBUMS, NONE, AND, OR}
-
 # connections
 var connection : DatabaseConnection
 
@@ -69,114 +67,8 @@ func queue_all():
 	photo_queue = []
 	for photo in photos:
 		photo_queue.append(photo)
-			
-# ADD PHOTO THE PHOTO_LOADER AND CURRENT LOADED PHOTOS
-# INPUT: ROW OF DATABASE
-func add_photo(result):
-	# IF ADDING DUPLICATE PHOTO AND DB_CHANGED IS MARKED TRUE:
-	# BUG: THIS WILL BE RUN AND PROGRAM WIL FAIL!!
-	if Global.connect_to_api:
-		pass
-	else:
-		pass
+	
+func photo_query(query_input, params, query_type := DatabaseConnection.TAGS) -> Array:
+	photo_queue = connection.photo_query(photos, query_input, params, query_type)
+	return photo_queue
 		
-	var path = result["path"]
-	# load image object to get image information
-	var image = Image.load_from_file(path)
-	var new_photo_tile = PhotoTile.new(image.get_size().x, image.get_size().y, result["id"], path)
-	new_photo_tile.description = "" # placeholder
-	new_photo_tile.photo_name = result["name"]
-	#new_photo_tile.tags = result["tags"]
-	new_photo_tile.date = result["date"]
-	
-	photos.append(new_photo_tile)
-	curr_id = result["id"]
-	Database.num_of_photos += 1
-	
-func photo_query(query_input, params, query_type := TAGS) -> Array:
-	if query_type == ID:
-		photo_queue = query_id(query_input, params)
-		return photo_queue
-	elif query_type == TAGS or query_type == ALBUMS:
-		photo_queue = query(query_input, params, query_type)
-		return photo_queue
-	return []
-		
-func query_id(id, params) -> Array:
-	var db = Database.db
-	var output = []
-	
-	
-	return output
-	
-func query(search_list, params, query_type) -> Array:
-	var db = Database.db
-	var output = []
-	
-	var table : String
-	var descriptor : String
-	
-	print("[PL, query_tag()] search(es): ", search_list)
-	
-	if search_list is String:
-		search_list = [search_list]
-		print("[PL, query_tag()] string to list: ", search_list)
-		
-	if query_type == TAGS:
-		table = "tags"
-		descriptor = "tag"
-	elif query_type == ALBUMS:
-		table = "photo_album"
-		descriptor = "album_id"
-	else:
-		print("[PL, query_tag] QUERY_TYPE: SOMETHING WENT WRONG")
-		return [-1]
-		
-	if params == PhotoLoader.OR:
-		print("[PL, query_tag] OR search")
-		var dict = {}
-		
-		for search in search_list:
-			var query = "SELECT photo_id FROM {table} WHERE {descriptor} == '{search}'".format({
-				"table": table, "descriptor": descriptor, "search": search
-			})
-			print("[PL, query_tag()] querying database: ", query)
-			db.query(query)
-			var result = db.query_result
-			print("[PL, query_tag()] result: ", result)
-	
-			# PREVENT DUPLICATES
-			for photo_in_db in result:
-				var index = photo_in_db["photo_id"] - 1
-				dict[index] = true
-		# ADD PHOTOS TO OUTPUT
-		for val in dict:
-			print("[PL, dict{}] ", val)
-			output.append(photos[val])
-				
-	elif params == PhotoLoader.AND:
-		print("[PL, query_tag] AND search")
-		var dict = {}
-		var val_to_match = search_list.size()
-		
-		for search in search_list:
-			var query = "SELECT photo_id FROM {table} WHERE {descriptor} == '{search}'".format({
-				"table": table, "descriptor": descriptor, "search": search
-			})
-			print("[PL, query_tag()] querying database: ", query)
-			db.query(query)
-			var result = db.query_result
-			print("[PL, query_tag()] result: ", result)
-			for photo_in_db in result:
-				var index = photo_in_db["photo_id"] - 1
-				if dict.has(index):
-					dict[index] += 1
-				else:
-					dict[index] = 1
-		for val in dict:
-			if dict[val] == val_to_match:
-				print("[PL, dict{}] ", val)
-				output.append(photos[val])
-		
-
-	return output

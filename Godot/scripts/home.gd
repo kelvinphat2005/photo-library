@@ -227,7 +227,7 @@ func test4():
 	PhotoLoader.photos[6].add_tag("skibidi")
 
 	clear_rows()
-	PhotoLoader.photo_query(["buh"], PhotoLoader.AND, PhotoLoader.TAGS)
+	PhotoLoader.photo_query(["buh"], DatabaseConnection.AND, DatabaseConnection.TAGS)
 	load_row_queue()
 
 
@@ -311,14 +311,14 @@ func _search() -> void:
 	
 	var type
 	if search_dropdown.text == "OR":
-		type = PhotoLoader.OR
+		type = DatabaseConnection.OR
 	elif search_dropdown.text == "AND":
-		type = PhotoLoader.AND
+		type = DatabaseConnection.AND
 	elif search_dropdown.text == "ID":
-		type = PhotoLoader.ID
+		type = DatabaseConnection.ID
 	
 	clear_rows()
-	PhotoLoader.photo_query(searches, type, PhotoLoader.TAGS)
+	PhotoLoader.photo_query(searches, type, DatabaseConnection.TAGS)
 	load_row_queue()
 
 	# finish
