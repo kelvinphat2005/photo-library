@@ -31,13 +31,12 @@ access = 2
 
 [node name="Rows" type="Node2D" parent="Home"]
 
-[node name="ServerDBConnection" type="Control" parent="." node_paths=PackedStringArray("http_request")]
+[node name="ServerDBConnection" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("3_0bbpv")
-http_request = NodePath("HTTPRequest")
 test_mode = true
 
 [node name="HTTPRequest" type="HTTPRequest" parent="ServerDBConnection"]

@@ -68,3 +68,9 @@ def add_photo_img(db : sqlite3.Connection, img, name : str = "", description : s
         print("[CRUD.PY] Duplicate Photo Error")
     finally:
         return
+    
+def photo_size(conn : sqlite3.Connection) -> int:
+    cur = conn.cursor()
+    cur.execute("SELECT COUNT(*) FROM photos")
+    result = cur.fetchall()
+    return result[0][0]

@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://deg6k2x345ag4"]
+
+[ext_resource type="Script" uid="uid://bs8gtbqvn48y8" path="res://scripts/api_request.gd" id="1_vra5k"]
+
+[node name="Apiconnectiontest" type="Node2D"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 486.0
+offset_top = 270.0
+offset_right = 526.0
+offset_bottom = 310.0
+script = ExtResource("1_vra5k")
+test_mode = true

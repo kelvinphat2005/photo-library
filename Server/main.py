@@ -43,14 +43,9 @@ async def add_photo(photo : UploadFile = File(...)):
     tmp_path = TEMP_FOLDER / f"{uuid4().hex}"
     extension = pathlib.Path(photo.filename).suffix.lower()
     print(extension)
-    
-    if not photo.filename:
-        raise HTTPException(400, "No filename supplied")
-    if extension not in {".png", ".jpg", ".jpeg"}:
-        raise HTTPException(400, f"Unsupported extension {extension!r}")
 
     with tmp_path.open("wb") as buffer:
-        while chunk := await photo.read(1 << 14):   # 16 KiB
+        while chunk := await photo.read(1 << 14):
             buffer.write(chunk)
 
     img = cv2.imread(str(tmp_path), cv2.IMREAD_UNCHANGED)
@@ -64,12 +59,19 @@ async def add_photo(photo : UploadFile = File(...)):
 
 @app.get("/photos/{photo_id}")
 async def get_photo(photo_id : int):
+    print("buh")
     with sqlite3.connect(DATABASE_PATH) as db:
         photo = crud.get_photo_from_id(db, photo_id)
         file_path = photo.path
         print("File Path:", file_path)
         return FileResponse(file_path, media_type="image/jpeg")
-    
+
+@app.get("/size/photos")
+async def photo_table_size():
+    with sqlite3.connect(DATABASE_PATH) as db:
+        size = crud.photo_size(db)
+        return {"size": size}
+
 @app.get("/test/{id}")
 async def test(id : int):
     return {"penid": id}

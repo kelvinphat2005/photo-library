@@ -32,6 +32,8 @@ func _process(delta: float) -> void:
 				Database.db.query(str_query)
 				result = Database.db.query_result
 				print(result)
+			else:
+				var db_size
 			
 			# iterate through results
 			# result will be a list of dictionaries
@@ -63,6 +65,11 @@ func _process(delta: float) -> void:
 					print("[PL]--> ",result)
 					
 					curr_id = result[0]["id"]
+			else:
+				print("[PL] API Server DB Changed")
+				
+				
+				pass
 			photos.append(connection.add_photo(result[0]["path"],result[0]["id"]))
 			db_changed = false
 			
