@@ -32,9 +32,10 @@ var search_type_dropdown : OptionButton
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	Database.create_database()
-	Database.db.open_db()
-	PhotoLoader.active = true
+	if not Global.connect_to_api:
+		Database.create_database()
+		Database.db.open_db()
+		PhotoLoader.active = true
 	
 	SignalBus.connect("_update_row_height_offset", _add_row_height_offset)
 	get_tree().get_root().size_changed.connect(resize) 
@@ -324,11 +325,13 @@ func _search() -> void:
 	search.text = ""
 	
 func _on_file_dialog_files_selected(paths: PackedStringArray) -> void:
-	for i in paths:
-		Database.add_photo(i)
+	if not Global.connect_to_api:
+		for i in paths:
+			Database.add_photo(i)
 
 func _on_file_dialog_file_selected(path: String) -> void:
-	Database.add_photo(path)
+	if not Global.connect_to_api:
+		Database.add_photo(path)
 
 func change_camera_lock(mode : bool):
 	camera_lock = mode

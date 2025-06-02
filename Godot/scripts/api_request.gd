@@ -29,5 +29,11 @@ func _on_http_request_request_completed(result: int, response_code: int, headers
 	
 	
 func _ready():
+	if not Global.connect_to_api:
+		print("[HTTP REQUEST] connect_to_api is false, removing self from scene")
+		get_parent().remove_child(self)
+		queue_free()
+		return
+
 	print("[HTTP REQUEST] Start")
 	get_photo_from_id(2)

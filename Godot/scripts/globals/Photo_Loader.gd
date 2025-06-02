@@ -14,7 +14,6 @@ var curr_id : int = -1
 
 enum {ID, TAGS, ALBUMS, NONE, AND, OR}
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if active:
 		# only load ALL photos at beginning
@@ -165,5 +164,4 @@ func query(search_list, params, query_type) -> Array:
 				output.append(photos[val])
 		
 
-	
 	return output
