@@ -99,5 +99,4 @@ func query(photos, search_list, params, query_type) -> Array:
 				print("[PL, dict{}] ", val)
 				output.append(photos[val])
 		
-
 	return output

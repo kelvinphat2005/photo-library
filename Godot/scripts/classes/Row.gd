@@ -20,6 +20,7 @@ func _init(iwidth):
 # if row is already filled to the max, do not add and return false else return true
 func add_photo(photo : PhotoTile) -> bool:
 	
+	
 	photo.resize(photo.calc_new_x(starting_height),starting_height)
 	
 	if (available_width < 5):

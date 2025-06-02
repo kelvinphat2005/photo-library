@@ -108,6 +108,9 @@ func load_row_queue() -> void:
 
 
 func load_new_row():
+	if PhotoLoader.photos.size() < 0:
+		return true
+	
 	print("[H, ROW]---------NEW CALL-------------")
 	
 	# dont make row if no photos
