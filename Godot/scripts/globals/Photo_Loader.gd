@@ -14,6 +14,15 @@ var curr_id : int = -1
 
 enum {ID, TAGS, ALBUMS, NONE, AND, OR}
 
+# connections
+var connection : DatabaseConnection
+
+func _ready() -> void:
+	if Global.connect_to_api:
+		connection = ServerConnection.new()
+	else:
+		connection = LocalConnection.new()
+
 func _process(delta: float) -> void:
 	if active:
 		# only load ALL photos at beginning
@@ -32,7 +41,8 @@ func _process(delta: float) -> void:
 				var path = row["path"]
 				# load image object to get image information
 				
-				add_photo(row)
+				curr_id = row["id"]
+				photos.append(connection.add_photo(row["path"],row["id"]))
 			
 			# finished loading all photos
 			num_of_photos_on_launch = Database.num_of_photos
@@ -50,8 +60,8 @@ func _process(delta: float) -> void:
 				var result = Database.db.query_result
 				print("[PL]--> ",result)
 				
-				add_photo(result[0])
-				num_of_photos_on_launch += 1
+				curr_id = result[0]["id"]
+				photos.append(connection.add_photo(result[0]["path"],result[0]["id"]))
 				
 			db_changed = false
 			
@@ -65,6 +75,11 @@ func queue_all():
 func add_photo(result):
 	# IF ADDING DUPLICATE PHOTO AND DB_CHANGED IS MARKED TRUE:
 	# BUG: THIS WILL BE RUN AND PROGRAM WIL FAIL!!
+	if Global.connect_to_api:
+		pass
+	else:
+		pass
+		
 	var path = result["path"]
 	# load image object to get image information
 	var image = Image.load_from_file(path)
