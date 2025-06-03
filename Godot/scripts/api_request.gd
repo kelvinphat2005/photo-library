@@ -14,10 +14,21 @@ func get_photo_from_id(id : int) -> void:
 	# check if primary http_request is being used
 	# if it is, create another HTTP Request Node
 	
-	http_request.request(url)
+	var response = http_request.request(url)
+	
+	if response != 0:
+		print("[HTTP REQUEST] No response")
+		# if no response, create new HTTP Node
+		var new_http_request := HTTPRequest.new()
+		add_child(new_http_request)
+		new_http_request.request_completed.connect(self.http_request_completed.bind(new_http_request, true))
+		new_http_request.request(url)
+		
+		#new_http_request.queue_free()
 	
 
-func http_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+
+func http_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, request, delete : bool) -> void:
 	print("[HTTP REQUEST] HTTP Request Completed: {result} response code: {response_code} headers: {headers}\nbody: {body}".format(
 		{
 			"result": result,
@@ -37,6 +48,8 @@ func http_request_completed(result: int, response_code: int, headers: PackedStri
 	img.load_jpg_from_buffer(body)
 	ImageTexture.create_from_image(img)
 	
+	if delete:
+		request.queue_free()
 	
 	
 func _ready():
@@ -47,6 +60,12 @@ func _ready():
 	if test_mode:
 		print("[HTTP REQUEST] Test")
 		Global.connect_to_api = true
+		get_photo_from_id(1)
+		get_photo_from_id(2)
+		get_photo_from_id(1)
+		get_photo_from_id(2)
+		get_photo_from_id(1)
+		get_photo_from_id(2)
 		get_photo_from_id(1)
 		get_photo_from_id(2)
 
