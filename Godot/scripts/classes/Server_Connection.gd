@@ -10,3 +10,7 @@ func photo_query(photos, query_input, params, query_type := TAGS) -> Array:
 func remove_photo(id : int) -> void:
 	return
 	
+func get_size() -> int:
+	
+	
+	return -1

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://deg6k2x345ag4"]
 
-[ext_resource type="Script" uid="uid://bs8gtbqvn48y8" path="res://scripts/api_request.gd" id="1_vra5k"]
+[ext_resource type="Script" uid="uid://bs8gtbqvn48y8" path="res://scripts/globals/API_Request.gd" id="1_vra5k"]
 
 [node name="Apiconnectiontest" type="Node2D"]
 
