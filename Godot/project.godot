@@ -21,6 +21,7 @@ Database="*res://scripts/globals/Database.gd"
 PhotoLoader="*res://scripts/globals/Photo_Loader.gd"
 SignalBus="*res://scripts/globals/SignalBus.gd"
 Global="*res://scripts/globals/Global.gd"
+ApiRequest="*res://scripts/globals/API_Request.gd"
 
 [display]
 

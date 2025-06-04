@@ -18,8 +18,11 @@ var connection : DatabaseConnection
 func _ready() -> void:
 	if Global.connect_to_api:
 		connection = ServerConnection.new()
+		num_of_photos_on_launch = await ApiRequest.get_photo_size()
+		active = true
 	else:
 		connection = LocalConnection.new()
+		
 
 func _process(delta: float) -> void:
 	if active:
@@ -28,12 +31,13 @@ func _process(delta: float) -> void:
 			var result = []
 			if not Global.connect_to_api:
 				var str_query = "SELECT * FROM photos"
-				print("PHOTO LOADER str_query: ", str_query)
+				print("[PHOTO LOADER] str_query: ", str_query)
 				Database.db.query(str_query)
 				result = Database.db.query_result
 				print(result)
 			else:
-				var db_size
+				print("[PHOTO LOADER] API, num of photos on launch: ", num_of_photos_on_launch)
+				print("X")
 			
 			# iterate through results
 			# result will be a list of dictionaries

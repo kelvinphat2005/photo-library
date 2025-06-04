@@ -14,7 +14,7 @@ var details_container : VerticalItemContainer
 # Right hand details box
 @export var details_width : int = 500
 
-var debug = true
+var debug = false
 
 # TODO: ENABLE/DISABLE CAMERA MOVEMENT WHEN IMAGE IS BEING PREVIEWED
 

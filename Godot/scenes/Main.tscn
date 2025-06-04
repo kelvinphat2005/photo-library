@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8cn8wlb0lio6"]
+[gd_scene load_steps=3 format=3 uid="uid://c8cn8wlb0lio6"]
 
 [ext_resource type="Script" uid="uid://85c77drtkrsx" path="res://scripts/classes/Image_Preview.gd" id="1_rvslj"]
 [ext_resource type="Script" uid="uid://dg3ba1mcch8n8" path="res://scripts/home.gd" id="2_0bbpv"]
-[ext_resource type="Script" uid="uid://bs8gtbqvn48y8" path="res://scripts/globals/API_Request.gd" id="3_0bbpv"]
 
 [node name="Main" type="Node2D"]
 
@@ -31,16 +30,5 @@ access = 2
 
 [node name="Rows" type="Node2D" parent="Home"]
 
-[node name="ServerDBConnection" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("3_0bbpv")
-test_mode = true
-
-[node name="HTTPRequest" type="HTTPRequest" parent="ServerDBConnection"]
-
 [connection signal="file_selected" from="Home/FileDialog" to="Home" method="_on_file_dialog_file_selected"]
 [connection signal="files_selected" from="Home/FileDialog" to="Home" method="_on_file_dialog_files_selected"]
-[connection signal="request_completed" from="ServerDBConnection/HTTPRequest" to="ServerDBConnection" method="_on_http_request_request_completed"]

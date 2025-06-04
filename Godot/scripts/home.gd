@@ -35,6 +35,7 @@ func _ready() -> void:
 	if not Global.connect_to_api:
 		Database.create_database()
 		Database.db.open_db()
+		print("JKSGHDHJKLGSDHJKLDFGDFGDGFDFG")
 		PhotoLoader.active = true
 	
 	SignalBus.connect("_update_row_height_offset", _add_row_height_offset)
