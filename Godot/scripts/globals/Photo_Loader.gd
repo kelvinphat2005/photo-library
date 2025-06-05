@@ -15,7 +15,18 @@ var curr_id : int = -1
 # connections
 var connection : DatabaseConnection
 
+# slow down process
+var tick_rate := 2
+@onready var ticker := Timer.new()
+
 func _ready() -> void:
+	# create timer for tickrate
+	ticker.wait_time = 1.0 / tick_rate
+	ticker.autostart = true
+	ticker.one_shot = false
+	add_child(ticker)
+	ticker.timeout.connect(_on_tick)
+	
 	if Global.connect_to_api:
 		connection = ServerConnection.new()
 		num_of_photos_on_launch = await ApiRequest.get_photo_size()
@@ -24,7 +35,8 @@ func _ready() -> void:
 		connection = LocalConnection.new()
 		
 
-func _process(delta: float) -> void:
+func _on_tick() -> void:
+	
 	if active:
 		# only load ALL photos at beginning
 		if first_launch:
@@ -37,7 +49,14 @@ func _process(delta: float) -> void:
 				print(result)
 			else:
 				print("[PHOTO LOADER] API, num of photos on launch: ", num_of_photos_on_launch)
-				print("X")
+				for id in range(1, num_of_photos_on_launch + 1):
+					var img = await ApiRequest.get_photo_from_id(id)
+					print("XXXXXXXXXXXXX" , img)
+					var sprite := Sprite2D.new()
+					sprite.texture = img
+					get_parent().add_child(sprite)
+					
+				first_launch = false
 			
 			# iterate through results
 			# result will be a list of dictionaries

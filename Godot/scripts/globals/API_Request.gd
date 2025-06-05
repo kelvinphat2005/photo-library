@@ -7,23 +7,72 @@ extends Node
 
 var queue_id = []
 
-func get_photo_from_id(id : int) -> void:
+# with an id, return the image data
+# id, name, date, description
+func get_photo_info_from_id(id : int):
 	var url = Global.SERVER_IP + "/photos/" + str(id)
-	print("[HTTP REQUEST] url: ", url)
+	print("[HTTP REQUEST, get_photo_info_from_id] url: ", url)
+	
+	http_request.request(url)
+	var response = await http_request.request_completed
+	var new_http_request : HTTPRequest
+	
+	if response[1] != 0:
+		print("[HTTP REQUEST] No response")
+		# if no response, create new HTTP Node
+		new_http_request = HTTPRequest.new()
+		add_child(new_http_request)
+		new_http_request.request(url)
+		response = await new_http_request.request_completed
+
+	var result = response[0]
+	var response_code = response[1]
+	# var _headers = response[2]
+	var body = response[3]
+	
+	var json = JSON.parse_string(body.get_string_from_utf8())  
+	img.load_jpg_from_buffer(body)
+	
+	if new_http_request:
+		new_http_request.queue_free()
+	
+	return ImageTexture.create_from_image(img)
+
+# With an ID, return the image image texture
+# this call only gets the raw data of the image
+func get_photo_from_id(id : int) -> ImageTexture:
+	var url = Global.SERVER_IP + "/photos/" + str(id) + "/raw"
+	print("[HTTP REQUEST, get_photo_from_id] url: ", url)
 	# check if primary http_request is being used
 	# if it is, create another HTTP Request Node
 	
-	var response = http_request.request(url)
+	http_request.request(url)
+	var response = await http_request.request_completed
+	var new_http_request : HTTPRequest
 	
-	if response != 0:
-		print("[HTTP REQUEST] No response")
+	if response[1] != 0:
+		print("[HTTP REQUEST, get_photo_from_id] No response")
 		# if no response, create new HTTP Node
-		var new_http_request := HTTPRequest.new()
+		new_http_request = HTTPRequest.new()
 		add_child(new_http_request)
-		new_http_request.request_completed.connect(self.http_request_completed.bind(new_http_request, true))
 		new_http_request.request(url)
-		
-		#new_http_request.queue_free()
+		response = await new_http_request.request_completed
+
+	
+
+	var result = response[0]
+	var response_code = response[1]
+	# var _headers = response[2]
+	var body = response[3]
+	
+	# var json = JSON.parse_string(body.get_string_from_utf8())  
+	
+	
+	if new_http_request:
+		new_http_request.queue_free()
+	
+	img.load_jpg_from_buffer(body)
+	return ImageTexture.create_from_image(img)
 	
 func get_photo_size() -> int:
 	var url = Global.SERVER_IP + "/size/photos"
@@ -35,6 +84,8 @@ func get_photo_size() -> int:
 	add_child(new_http_request)
 	new_http_request.request(url)
 	var response = await new_http_request.request_completed
+	
+	
 	
 	var result = response[0]
 	var response_code = response[1]
@@ -59,6 +110,7 @@ func http_request_completed(result: int, response_code: int, headers: PackedStri
 	))
 	
 	if test_mode:
+		print("[HTTP REQUEST] CREATING TEST IMAGE")
 		img.load_jpg_from_buffer(body)
 		var sprite := Sprite2D.new()
 		sprite.texture = ImageTexture.create_from_image(img)
@@ -80,7 +132,6 @@ func _ready():
 	if test_mode:
 		print("[HTTP REQUEST] Test")
 		Global.connect_to_api = true
-		get_photo_size()
 
 	
 	if not Global.connect_to_api:

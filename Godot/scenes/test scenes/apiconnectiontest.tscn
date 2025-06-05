@@ -12,4 +12,3 @@ offset_top = 270.0
 offset_right = 526.0
 offset_bottom = 310.0
 script = ExtResource("1_vra5k")
-test_mode = true
