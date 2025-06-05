@@ -39,9 +39,4 @@ def init_db() -> None:
             );
         """)
 
-def photo_size(conn : sqlite3.Connection) -> int:
-    cur = conn.cursor()
-    cur.execute("SELECT COUNT(*) FROM photos")
-    result = cur.fetchall()
-    return result[0][0]
 

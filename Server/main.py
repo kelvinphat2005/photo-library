@@ -59,6 +59,19 @@ async def add_photo(photo : UploadFile = File(...)):
 
 @app.get("/photos/{photo_id}")
 async def get_photo(photo_id : int):
+    with sqlite3.connect(DATABASE_PATH) as db:
+        photo = crud.get_photo_from_id(db, photo_id)
+        return {
+            "id": photo.id,
+            "name": photo.name,
+            "date": photo.date,
+            "description": photo.description,
+            "path": photo.path,
+            "raw_path": f"/photos/{photo_id}/raw",
+        }
+
+@app.get("/photos/{photo_id}/raw")
+async def get_photo_raw(photo_id : int):
     print("buh")
     with sqlite3.connect(DATABASE_PATH) as db:
         photo = crud.get_photo_from_id(db, photo_id)

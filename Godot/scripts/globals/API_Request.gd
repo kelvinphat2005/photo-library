@@ -31,16 +31,21 @@ func get_photo_info_from_id(id : int):
 	var body = response[3]
 	
 	var json = JSON.parse_string(body.get_string_from_utf8())  
-	img.load_jpg_from_buffer(body)
+	#print(json)
 	
 	if new_http_request:
 		new_http_request.queue_free()
 	
-	return ImageTexture.create_from_image(img)
+	return {
+		"id": int(json["id"]),
+		"name": json["name"],
+		"date": json["date"],
+		"description": json["description"],
+		}
 
 # With an ID, return the image image texture
 # this call only gets the raw data of the image
-func get_photo_from_id(id : int) -> ImageTexture:
+func get_photo_from_id(id : int):
 	var url = Global.SERVER_IP + "/photos/" + str(id) + "/raw"
 	print("[HTTP REQUEST, get_photo_from_id] url: ", url)
 	# check if primary http_request is being used
@@ -58,8 +63,6 @@ func get_photo_from_id(id : int) -> ImageTexture:
 		new_http_request.request(url)
 		response = await new_http_request.request_completed
 
-	
-
 	var result = response[0]
 	var response_code = response[1]
 	# var _headers = response[2]
@@ -67,12 +70,12 @@ func get_photo_from_id(id : int) -> ImageTexture:
 	
 	# var json = JSON.parse_string(body.get_string_from_utf8())  
 	
-	
 	if new_http_request:
 		new_http_request.queue_free()
 	
-	img.load_jpg_from_buffer(body)
-	return ImageTexture.create_from_image(img)
+	#img.load_jpg_from_buffer(body)
+	#return ImageTexture.create_from_image(img)
+	return body # <-- raw data
 	
 func get_photo_size() -> int:
 	var url = Global.SERVER_IP + "/size/photos"
@@ -99,34 +102,10 @@ func get_photo_size() -> int:
 	new_http_request.queue_free()
 	return size
 
-func http_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, request, delete : bool) -> void:
-	print("[HTTP REQUEST] HTTP Request Completed: {result} response code: {response_code} headers: {headers}\nbody: {body}".format(
-		{
-			"result": result,
-			"response_code": response_code,
-			"headers": headers,
-			"body": "body",
-		}
-	))
-	
-	if test_mode:
-		print("[HTTP REQUEST] CREATING TEST IMAGE")
-		img.load_jpg_from_buffer(body)
-		var sprite := Sprite2D.new()
-		sprite.texture = ImageTexture.create_from_image(img)
-		get_parent().add_child(sprite)
-	
-	
-	img.load_jpg_from_buffer(body)
-	ImageTexture.create_from_image(img)
-	
-	if delete:
-		request.queue_free()
 	
 	
 func _ready():
 	# connect the first (primary) HTTP
-	http_request.request_completed.connect(self.http_request_completed)
 	add_child(http_request)
 	
 	if test_mode:

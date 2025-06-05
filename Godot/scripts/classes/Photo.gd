@@ -63,7 +63,7 @@ func resize(new_x, new_y) -> void:
 
 # uses path to load img
 func load_img() -> bool:
-	if Database.db and path != "":
+	if path != "":
 		var img = Image.load_from_file(path)
 		texture = ImageTexture.create_from_image(img)
 		return true

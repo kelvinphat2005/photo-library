@@ -14,12 +14,16 @@ var curr_id : int = -1
 
 # connections
 var connection : DatabaseConnection
+const SAVE_DIR := "user://photos"
 
 # slow down process
 var tick_rate := 2
 @onready var ticker := Timer.new()
 
 func _ready() -> void:
+	# create /photos/ folder in user directory (in appdata)
+	DirAccess.open("user://").make_dir_recursive(SAVE_DIR)
+	
 	# create timer for tickrate
 	ticker.wait_time = 1.0 / tick_rate
 	ticker.autostart = true
@@ -50,14 +54,28 @@ func _on_tick() -> void:
 			else:
 				print("[PHOTO LOADER] API, num of photos on launch: ", num_of_photos_on_launch)
 				for id in range(1, num_of_photos_on_launch + 1):
-					var img = await ApiRequest.get_photo_from_id(id)
-					print("XXXXXXXXXXXXX" , img)
-					var sprite := Sprite2D.new()
-					sprite.texture = img
-					get_parent().add_child(sprite)
-					
-				first_launch = false
-			
+					var bytes = await ApiRequest.get_photo_from_id(id)
+					var data = await ApiRequest.get_photo_info_from_id(id)
+
+					# COPY THE IMG LOCALLY, GET THAT PATH
+					# USE THAT PATH
+					# I DONT WANT TO CHANGE MY CODE!!!
+					# 1. Save locally
+					var img := Image.new()
+					var error := img.load_jpg_from_buffer(bytes)
+					if error != OK:
+						push_error("load_jpg_from_buffer failed: %s" % error)
+						return
+					# 2. Path
+					var path = "user://photos/{id}.jpg".format({"id": data["id"]})
+					img.save_jpg(path, 0.9)
+					# 3. Row like database
+					var r = {}
+					r["id"] = data["id"]
+					r["path"] = path
+					r["date"] = data["date"]
+					r["description"] = data["description"]
+					result.append(r)
 			# iterate through results
 			# result will be a list of dictionaries
 			# each dictionary is a row
