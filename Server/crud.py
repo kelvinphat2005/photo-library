@@ -60,8 +60,8 @@ def add_photo_img(db : sqlite3.Connection, img, name : str = "", description : s
     # add
     try:
         db.execute(
-            "INSERT INTO photos (path, date, name, description) VALUES (?, ?, ?, ?)",
-            (rel_path, dte, name, description),
+            "INSERT INTO photos (date, path, name, description) VALUES (?, ?, ?, ?)",
+            (dte, rel_path, name, description),
         )
         db.commit()
     except:

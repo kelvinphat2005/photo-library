@@ -77,6 +77,7 @@ func get_photo_from_id(id : int):
 	#return ImageTexture.create_from_image(img)
 	return body # <-- raw data
 	
+# get num of rows in 'photos' table
 func get_photo_size() -> int:
 	var url = Global.SERVER_IP + "/size/photos"
 	print("[HTTP REQUEST, photo_size] url: ", url)
@@ -87,8 +88,6 @@ func get_photo_size() -> int:
 	add_child(new_http_request)
 	new_http_request.request(url)
 	var response = await new_http_request.request_completed
-	
-	
 	
 	var result = response[0]
 	var response_code = response[1]
@@ -102,8 +101,10 @@ func get_photo_size() -> int:
 	new_http_request.queue_free()
 	return size
 
-	
-	
+# add a locally stored photo to server db
+func add_photo(path : String) -> void:
+	pass
+
 func _ready():
 	# connect the first (primary) HTTP
 	add_child(http_request)
@@ -112,7 +113,6 @@ func _ready():
 		print("[HTTP REQUEST] Test")
 		Global.connect_to_api = true
 
-	
 	if not Global.connect_to_api:
 		print("[HTTP REQUEST] connect_to_api is false, removing self from scene")
 		get_parent().remove_child(self)
