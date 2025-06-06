@@ -1,5 +1,5 @@
-extends DatabaseConnection
-class_name ServerConnection
+extends TileFactory
+class_name ServerTileFactory
 
 func add_photo(path : String, id : int, photo_name := "", description := "", date := "") -> PhotoTile:
 	var image = Image.load_from_file(path)
@@ -11,13 +11,5 @@ func add_photo(path : String, id : int, photo_name := "", description := "", dat
 	
 	return new_photo_tile
 	
-func photo_query(photos, query_input, params, query_type := TAGS) -> Array:
-	return []
-	
 func remove_photo(id : int) -> void:
 	return
-	
-func get_size() -> int:
-	
-	
-	return -1

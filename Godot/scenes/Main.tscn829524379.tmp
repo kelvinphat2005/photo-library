@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8cn8wlb0lio6"]
+
+[ext_resource type="Script" uid="uid://85c77drtkrsx" path="res://scripts/classes/Image_Preview.gd" id="1_rvslj"]
+[ext_resource type="Script" uid="uid://dg3ba1mcch8n8" path="res://scripts/home.gd" id="2_0bbpv"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+position_smoothing_speed = 20.0
+
+[node name="ImagePreview" type="Node2D" parent="."]
+visible = false
+z_index = 5
+script = ExtResource("1_rvslj")
+
+[node name="Home" type="Node2D" parent="." node_paths=PackedStringArray("camera", "file_dialog", "row_node")]
+script = ExtResource("2_0bbpv")
+camera = NodePath("../Camera2D")
+file_dialog = NodePath("FileDialog")
+px_per_scroll = null
+row_node = NodePath("Rows")
+row_padding_y = null
+
+[node name="FileDialog" type="FileDialog" parent="Home"]
+title = "Open a File"
+position = Vector2i(0, 36)
+size = Vector2i(500, 1000)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+
+[node name="Rows" type="Node2D" parent="Home"]
+
+[connection signal="file_selected" from="Home/FileDialog" to="Home" method="_on_file_dialog_file_selected"]
+[connection signal="files_selected" from="Home/FileDialog" to="Home" method="_on_file_dialog_files_selected"]

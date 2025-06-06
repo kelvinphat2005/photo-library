@@ -231,7 +231,7 @@ func test4():
 	PhotoLoader.photos[6].add_tag("skibidi")
 
 	clear_rows()
-	PhotoLoader.photo_query(["buh"], DatabaseConnection.AND, DatabaseConnection.TAGS)
+	PhotoLoader.photo_query(["buh"], DatabaseQuery.AND, DatabaseQuery.TAGS)
 	load_row_queue()
 
 
@@ -315,14 +315,14 @@ func _search() -> void:
 	
 	var type
 	if search_dropdown.text == "OR":
-		type = DatabaseConnection.OR
+		type = DatabaseQuery.OR
 	elif search_dropdown.text == "AND":
-		type = DatabaseConnection.AND
+		type = DatabaseQuery.AND
 	elif search_dropdown.text == "ID":
-		type = DatabaseConnection.ID
+		type = DatabaseQuery.ID
 	
 	clear_rows()
-	PhotoLoader.photo_query(searches, type, DatabaseConnection.TAGS)
+	PhotoLoader.photo_query(searches, type, DatabaseQuery.TAGS)
 	load_row_queue()
 
 	# finish
@@ -335,7 +335,10 @@ func _on_file_dialog_files_selected(paths: PackedStringArray) -> void:
 
 func _on_file_dialog_file_selected(path: String) -> void:
 	if not Global.connect_to_api:
+		print("[HOME] Adding photo to local")
 		Database.add_photo(path)
+	else:
+		print("[HOME] Adding photo to server")
 
 func change_camera_lock(mode : bool):
 	camera_lock = mode

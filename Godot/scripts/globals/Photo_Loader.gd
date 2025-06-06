@@ -13,8 +13,10 @@ var num_of_photos_on_launch : int
 var curr_id : int = -1
 
 # connections
-var connection : DatabaseConnection
+var tileFactory : TileFactory
 const SAVE_DIR := "user://photos"
+# query object
+var queryNode : DatabaseQuery
 
 # slow down process
 var tick_rate := 2
@@ -32,11 +34,13 @@ func _ready() -> void:
 	ticker.timeout.connect(_on_tick)
 	
 	if Global.connect_to_api:
-		connection = ServerConnection.new()
+		tileFactory = ServerTileFactory.new()
+		queryNode = ServerDatabaseQuery.new()
 		num_of_photos_on_launch = await ApiRequest.get_photo_size()
 		active = true
 	else:
-		connection = LocalConnection.new()
+		tileFactory = LocalTileFactory.new()
+		queryNode = LocalDatabaseQuery.new()
 		
 
 func _on_tick() -> void:
@@ -56,7 +60,6 @@ func _on_tick() -> void:
 				for id in range(1, num_of_photos_on_launch + 1):
 					var bytes = await ApiRequest.get_photo_from_id(id)
 					var data = await ApiRequest.get_photo_info_from_id(id)
-
 					# COPY THE IMG LOCALLY, GET THAT PATH
 					# USE THAT PATH
 					# I DONT WANT TO CHANGE MY CODE!!!
@@ -85,7 +88,7 @@ func _on_tick() -> void:
 				# load image object to get image information
 				
 				curr_id = row["id"]
-				photos.append(connection.add_photo(row["path"],row["id"]))
+				photos.append(tileFactory.add_photo(row["path"],row["id"]))
 			
 			# finished loading all photos
 			num_of_photos_on_launch = Database.num_of_photos
@@ -108,10 +111,8 @@ func _on_tick() -> void:
 					curr_id = result[0]["id"]
 			else:
 				print("[PL] API Server DB Changed")
-				
-				
 				pass
-			photos.append(connection.add_photo(result[0]["path"],result[0]["id"]))
+			photos.append(tileFactory.add_photo(result[0]["path"],result[0]["id"]))
 			db_changed = false
 			
 func queue_all():
@@ -119,7 +120,7 @@ func queue_all():
 	for photo in photos:
 		photo_queue.append(photo)
 	
-func photo_query(query_input, params, query_type := DatabaseConnection.TAGS) -> Array:
-	photo_queue = connection.photo_query(photos, query_input, params, query_type)
+func photo_query(query_input, params, query_type := DatabaseQuery.TAGS) -> Array:
+	photo_queue = queryNode.photo_query(photos, query_input, params, query_type)
 	return photo_queue
 		
