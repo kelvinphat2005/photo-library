@@ -103,7 +103,30 @@ func get_photo_size() -> int:
 
 # add a locally stored photo to server db
 func add_photo(path : String) -> void:
-	pass
+	var url := Global.SERVER_IP + "/upload"
+	# convert to raw data
+	# pass that raw data to the server
+	# 1. conversion
+	var data := FileAccess.get_file_as_bytes(path)
+	# 2. choose a boundary that won't appear in the data
+	var boundary := "----GODOT_BOUNDARY_%s" % str(Time.get_ticks_msec())
+
+	# 3. build the multipart body
+	var body := PackedByteArray()
+	body.append_array(("--%s\r\n" % boundary).to_utf8_buffer())
+	body.append_array(("Content-Disposition: form-data; name=\"photo\"; filename=\"%s\"\r\n" % path.get_file()).to_utf8_buffer())
+	body.append_array(("Content-Type: image/jpeg\r\n\r\n").to_utf8_buffer())
+	body.append_array(data)
+	body.append_array("\r\n".to_utf8_buffer())
+	body.append_array(("--%s--\r\n" % boundary).to_utf8_buffer())
+
+	# 4. add the matching header
+	var headers = ["Content-Type: multipart/form-data; boundary=%s" % boundary]
+	
+	http_request.request_raw(url, headers, HTTPClient.METHOD_POST, body)
+	
+	var response = await http_request.request_completed
+
 
 func _ready():
 	# connect the first (primary) HTTP

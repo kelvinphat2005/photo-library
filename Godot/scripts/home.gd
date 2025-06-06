@@ -339,6 +339,7 @@ func _on_file_dialog_file_selected(path: String) -> void:
 		Database.add_photo(path)
 	else:
 		print("[HOME] Adding photo to server")
+		ApiRequest.add_photo(path)
 
 func change_camera_lock(mode : bool):
 	camera_lock = mode
